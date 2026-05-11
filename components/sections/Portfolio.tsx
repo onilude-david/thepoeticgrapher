@@ -1,41 +1,83 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+
 import Image from 'next/image'
-import { motion, useInView } from 'motion/react'
-import { ArrowRight } from 'lucide-react'
 import { useGSAP } from '@gsap/react'
-import { gsap } from '@/lib/gsap'
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+import { ArrowRight } from 'lucide-react'
+import { motion, useInView, useReducedMotion } from 'motion/react'
+
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { ImageCard } from '@/components/ui/ImageCard'
 import { Reveal } from '@/components/ui/Reveal'
+import { SectionLabel } from '@/components/ui/SectionLabel'
+import { gsap } from '@/lib/gsap'
+import { useLightbox, type LightboxImage } from '@/contexts/LightboxContext'
 import { portfolioItems } from '@/lib/data'
 import type { PortfolioItem } from '@/types'
 
-// Standalone fill-based card for the horizontal scroll track
-function PortfolioCard({ item }: { item: PortfolioItem }) {
+type Category = 'All' | 'Convocation' | 'Portrait' | 'Event'
+const CATEGORIES: Category[] = ['All', 'Convocation', 'Portrait', 'Event']
+
+const lightboxImages: LightboxImage[] = portfolioItems.map(item => ({
+  src: item.image,
+  alt: `${item.title} — ${item.caption}`,
+  title: item.title,
+  caption: item.caption,
+}))
+
+function GoldAccent() {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const shouldReduce = useReducedMotion()
+  return (
+    <motion.div
+      ref={ref}
+      className="h-px origin-left mb-7"
+      style={{ width: 44, backgroundColor: 'rgba(200,175,120,0.65)' }}
+      initial={shouldReduce ? { scaleX: 1 } : { scaleX: 0 }}
+      animate={isInView || shouldReduce ? { scaleX: 1 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      aria-hidden="true"
+    />
+  )
+}
+
+function PortfolioCard({
+  item,
+  index,
+  total,
+  onOpen,
+}: {
+  item: PortfolioItem
+  index: number
+  total: number
+  onOpen: () => void
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.15 })
 
   return (
-    <div
-      ref={ref}
-      className="portfolio-card relative flex-shrink-0 overflow-hidden group"
+    <button
+      type="button"
+      ref={ref as never}
+      className="portfolio-card relative flex-shrink-0 overflow-hidden group cursor-pointer"
+      onClick={onOpen}
+      aria-label={`View ${item.title}`}
       style={{
         width: 'min(62vw, 680px)',
         height: 'min(82vh, 740px)',
         marginRight: 16,
       }}
     >
-      {/* Clip-path image reveal */}
+      {/* Image with clip-path + scale reveal */}
       <motion.div
         className="absolute inset-0"
         initial={{ clipPath: 'inset(100% 0 0 0)' }}
         animate={isInView ? { clipPath: 'inset(0% 0 0 0)' } : {}}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Scale-in on reveal */}
         <motion.div
           className="absolute inset-0"
           initial={{ scale: 1.08 }}
@@ -53,30 +95,72 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
         </motion.div>
       </motion.div>
 
-      {/* Bottom overlay */}
+      {/* Top: category + frame counter */}
+      <div
+        className="absolute top-0 left-0 right-0 flex items-start justify-between p-5 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, transparent 100%)' }}
+      >
+        <span
+          className="font-sans uppercase tracking-[0.22em] text-white/60"
+          style={{ fontSize: 9 }}
+        >
+          {item.category}
+        </span>
+        <span
+          className="font-sans text-white/35 tabular-nums"
+          style={{ fontSize: 9, letterSpacing: '0.1em' }}
+        >
+          {String(index + 1).padStart(2, '0')}&thinsp;/&thinsp;{String(total).padStart(2, '0')}
+        </span>
+      </div>
+
+      {/* Bottom caption */}
       <div
         className="absolute inset-0 flex flex-col justify-end p-6 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)' }}
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 55%)' }}
       >
         <div className="flex items-end justify-between">
           <div>
-            <p className="font-serif text-white" style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}>
+            <p
+              className="font-serif text-white"
+              style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}
+            >
               {item.title}
             </p>
-            <p className="font-sans text-soft-muted uppercase mt-1" style={{ fontSize: 10, letterSpacing: '0.2em' }}>
+            <p
+              className="font-sans text-white/50 uppercase mt-1.5"
+              style={{ fontSize: 10, letterSpacing: '0.22em' }}
+            >
               {item.caption}
             </p>
           </div>
-          <ArrowRight size={14} strokeWidth={1.5} className="text-white mb-0.5" />
+          <ArrowRight
+            size={14}
+            strokeWidth={1.5}
+            className="text-white/40 mb-0.5 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300"
+          />
         </div>
       </div>
-    </div>
+    </button>
   )
 }
 
 export function Portfolio() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  const progressBarRef = useRef<HTMLDivElement>(null)
+  const { open } = useLightbox()
+  const [activeCategory, setActiveCategory] = useState<Category>('All')
+  const [gridRef] = useAutoAnimate<HTMLDivElement>({ duration: 300 })
+  const shouldReduce = useReducedMotion()
+
+  const filtered = activeCategory === 'All'
+    ? portfolioItems
+    : portfolioItems.filter(item => item.category === activeCategory)
+
+  const filteredLightbox = lightboxImages.filter((_, i) =>
+    activeCategory === 'All' || portfolioItems[i].category === activeCategory
+  )
 
   useGSAP(
     () => {
@@ -98,7 +182,10 @@ export function Portfolio() {
             scrub: 1,
             end: () => `+=${track.scrollWidth - window.innerWidth}`,
             invalidateOnRefresh: true,
-            onUpdate: () => {
+            onUpdate: (self) => {
+              if (progressBarRef.current) {
+                progressBarRef.current.style.transform = `scaleX(${self.progress})`
+              }
               const cards = track.querySelectorAll<HTMLElement>('.portfolio-card')
               const vw = window.innerWidth
               cards.forEach((card) => {
@@ -121,32 +208,112 @@ export function Portfolio() {
   return (
     <section
       ref={sectionRef}
+      // eslint-disable-next-line react/no-static-id -- navigation anchor, must be a predictable hash target
       id="stories"
       className="relative overflow-hidden"
       style={{ backgroundColor: '#FAF9F6' }}
       aria-labelledby="portfolio-heading"
     >
+      {/* Section number watermark */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-6 right-0 select-none pointer-events-none overflow-hidden leading-none"
+        style={{ zIndex: 0 }}
+      >
+        <span
+          className="font-serif text-ink block"
+          style={{
+            fontSize: 'clamp(160px, 22vw, 300px)',
+            fontWeight: 400,
+            opacity: 0.03,
+            letterSpacing: '-0.05em',
+            lineHeight: 1,
+          }}
+        >
+          03
+        </span>
+      </div>
+
       {/* Header */}
-      <div className="max-w-container mx-auto px-6 md:px-8 pt-16 pb-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="relative z-10 max-w-container mx-auto px-6 md:px-8 pt-20 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-end">
+
+          {/* Left: label + heading */}
           <div>
             <Reveal>
-              <SectionLabel text="Our Stories" className="mb-6" />
+              <SectionLabel text="Our Stories" />
             </Reveal>
+            <GoldAccent />
             <AnimatedHeading
+              // eslint-disable-next-line react/no-static-id -- aria-labelledby reference, must be predictable
               id="portfolio-heading"
               as="h2"
-              className="font-serif text-ink"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.02em' }}
+              className="font-serif text-ink text-section"
+              style={{ lineHeight: 1.04, letterSpacing: '-0.02em' }}
             >
-              Moments We&rsquo;ve Kept.
+              Moments We&apos;ve Kept.
             </AnimatedHeading>
           </div>
+
+          {/* Right: descriptor + drag hint (desktop) */}
           <Reveal delay={0.1} className="flex-shrink-0">
-            <p className="font-sans text-muted max-w-xs" style={{ fontSize: 15, lineHeight: 1.75 }}>
-              A selection of work. Each image made with someone who trusted us to get it right.
-            </p>
+            <div className="md:max-w-[280px] space-y-5 md:pb-1">
+              <p
+                className="font-sans text-muted"
+                style={{ fontSize: 15, lineHeight: 1.75 }}
+              >
+                A selection of work. Each image made with someone who trusted us to get it right.
+              </p>
+              <motion.div
+                className="hidden lg:flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.6 }}
+              >
+                <motion.span
+                  aria-hidden="true"
+                  animate={shouldReduce ? {} : { x: [0, 5, 0] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowRight size={11} strokeWidth={1.5} className="text-muted" />
+                </motion.span>
+                <span
+                  className="font-sans text-muted uppercase tracking-[0.2em]"
+                  style={{ fontSize: 9 }}
+                >
+                  Drag to explore
+                </span>
+              </motion.div>
+            </div>
           </Reveal>
+        </div>
+
+        {/* Mobile category filters — editorial underline tabs */}
+        <div
+          className="flex lg:hidden gap-6 mt-8 flex-wrap"
+          role="group"
+          aria-label="Filter by category"
+        >
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setActiveCategory(cat)}
+              aria-pressed={activeCategory === cat}
+              className={`font-sans uppercase pb-2 border-b text-[10px] tracking-[0.18em] transition-all duration-300 ${
+                activeCategory === cat
+                  ? 'text-ink'
+                  : 'text-muted border-transparent hover:text-ink hover:border-soft-muted'
+              }`}
+              style={
+                activeCategory === cat
+                  ? { borderBottomColor: 'rgba(200,175,120,0.75)' }
+                  : undefined
+              }
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -156,26 +323,52 @@ export function Portfolio() {
         className="hidden lg:flex px-6 pb-16"
         style={{ gap: 0 }}
       >
-        {portfolioItems.map((item) => (
-          <PortfolioCard key={item.id} item={item} />
+        {portfolioItems.map((item, i) => (
+          <PortfolioCard
+            key={item.id}
+            item={item}
+            index={i}
+            total={portfolioItems.length}
+            onOpen={() => open(lightboxImages, i)}
+          />
         ))}
-        {/* End spacer */}
         <div className="flex-shrink-0 w-16" aria-hidden="true" />
       </div>
 
-      {/* Mobile: 2-column grid */}
-      <div className="lg:hidden grid grid-cols-2 gap-3 px-6 md:px-8 pb-16">
-        {portfolioItems.map((item) => (
+      {/* Mobile: 2-column grid with AutoAnimate */}
+      <div
+        ref={gridRef}
+        className="lg:hidden grid grid-cols-2 gap-3 px-6 md:px-8 pb-16"
+      >
+        {filtered.map((item, i) => (
           <ImageCard
-            key={`mobile-${item.id}`}
+            key={item.id}
             src={item.image}
             alt={`${item.title} — ${item.caption}`}
             title={item.title}
             caption={item.caption}
             showArrow
             aspectRatio="3/4"
+            onClick={() => open(filteredLightbox, i)}
           />
         ))}
+      </div>
+
+      {/* Desktop scroll progress bar — scaleX driven by GSAP onUpdate */}
+      <div
+        className="hidden lg:block absolute bottom-0 left-0 right-0 z-20"
+        style={{ height: 2 }}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0" style={{ backgroundColor: 'var(--border)' }} />
+        <div
+          ref={progressBarRef}
+          className="absolute inset-0 origin-left"
+          style={{
+            backgroundColor: 'rgba(200,175,120,0.7)',
+            transform: 'scaleX(0)',
+          }}
+        />
       </div>
     </section>
   )
