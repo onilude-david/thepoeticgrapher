@@ -37,6 +37,34 @@ const config: Config = {
       transitionTimingFunction: {
         editorial: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
+      keyframes: {
+        shimmer: {
+          from: { backgroundPosition: '250% center' },
+          to: { backgroundPosition: '-250% center' },
+        },
+        'border-beam': {
+          '100%': { 'offset-distance': '100%' },
+        },
+        shimmer_btn: {
+          '0%, 90%, 100%': { backgroundPosition: 'calc(-100% - var(--shimmer-width)) 0' },
+          '30%, 60%': { backgroundPosition: 'calc(100% + var(--shimmer-width)) 0' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+        'marquee-rev': {
+          from: { transform: 'translateX(-50%)' },
+          to: { transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 4s linear infinite',
+        'border-beam': 'border-beam calc(var(--duration,8)*1s) infinite linear',
+        shimmer_btn: 'shimmer_btn 8s infinite',
+        marquee: 'marquee 32s linear infinite',
+        'marquee-rev': 'marquee-rev 40s linear infinite',
+      },
     },
   },
   darkMode: 'class',

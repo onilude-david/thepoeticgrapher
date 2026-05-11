@@ -1,44 +1,55 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
+
 import { Button } from '@/components/ui/Button'
-import { SectionLabel } from '@/components/ui/SectionLabel'
 import { CountUp } from '@/components/ui/CountUp'
 import { HeroCanvas } from '@/components/ui/HeroCanvas'
+import { MarqueeStrip } from '@/components/ui/MarqueeStrip'
 import { ParallaxImage } from '@/components/ui/ParallaxImage'
+import { ShimmerText } from '@/components/ui/ShimmerText'
+import { useLightbox } from '@/contexts/LightboxContext'
 import { WHATSAPP_URL } from '@/lib/data'
 
 const ease = [0.22, 1, 0.36, 1] as const
+
+const heroPortrait = [{
+  src: '/images/Portraits/IMG_9777-2.jpeg',
+  alt: 'Portrait — ThePoeticGrapher Studios',
+  title: 'ThePoeticGrapher',
+  caption: 'Portrait Session · Lagos',
+}]
 
 interface HeroProps {
   ready: boolean
 }
 
 export function Hero({ ready }: HeroProps) {
-  const d = 0.1 // base delay (after preloader)
+  const d = 0.1
+  const { open } = useLightbox()
 
   return (
     <section
+      // eslint-disable-next-line react/no-static-id -- navigation anchor, must be a predictable hash target
       id="top"
       data-theme="dark"
       className="relative full-height w-full overflow-hidden"
       style={{ backgroundColor: '#080808' }}
       aria-label="Hero — ThePoeticGrapher Studios"
     >
-      {/* ── 3D Canvas — desktop only ─────────────────────────────────────── */}
+      {/* ── 3D Canvas — desktop only ──────────────────────────────────────── */}
       <div className="hidden md:block absolute inset-0">
         <HeroCanvas ready={ready} />
       </div>
 
-      {/* ── Gradient masks over canvas ───────────────────────────────────── */}
-      {/* Left: solid black → transparent — covers the text column */}
+      {/* ── Gradient masks ────────────────────────────────────────────────── */}
+      {/* Left: protects text column */}
       <div
         aria-hidden="true"
         className="hidden md:block absolute inset-y-0 left-0 z-[2] pointer-events-none"
         style={{
-          width: '52%',
-          background: 'linear-gradient(to right, #080808 45%, transparent 100%)',
+          width: '58%',
+          background: 'linear-gradient(to right, #080808 46%, transparent 100%)',
         }}
       />
       {/* Top: nav fade */}
@@ -46,21 +57,21 @@ export function Hero({ ready }: HeroProps) {
         aria-hidden="true"
         className="hidden md:block absolute top-0 left-0 right-0 z-[2] pointer-events-none"
         style={{
-          height: '15%',
+          height: '16%',
           background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)',
         }}
       />
-      {/* Bottom: scroll fade */}
+      {/* Bottom: seamless into next section */}
       <div
         aria-hidden="true"
         className="hidden md:block absolute bottom-0 left-0 right-0 z-[2] pointer-events-none"
         style={{
-          height: '10%',
+          height: '20%',
           background: 'linear-gradient(to top, #080808 0%, transparent 100%)',
         }}
       />
 
-      {/* ── Background wordmark ──────────────────────────────────────────── */}
+      {/* ── Background wordmark ───────────────────────────────────────────── */}
       <div
         aria-hidden="true"
         className="absolute bottom-0 right-0 overflow-hidden pointer-events-none select-none hidden md:block"
@@ -69,107 +80,196 @@ export function Hero({ ready }: HeroProps) {
         <span
           className="font-serif text-white whitespace-nowrap"
           style={{
-            fontSize: 'clamp(120px, 16vw, 200px)',
+            fontSize: 'clamp(100px, 14vw, 180px)',
             fontWeight: 400,
-            opacity: 0.03,
+            opacity: 0.022,
             lineHeight: 0.85,
             letterSpacing: '-0.03em',
             display: 'block',
-            transform: 'translateY(20%)',
+            transform: 'translateY(22%)',
           }}
         >
           THEPOETICGRAPHER
         </span>
       </div>
 
-      {/* ── Content grid ─────────────────────────────────────────────────── */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 min-h-[100dvh]">
-        {/* Left column — text */}
-        <div className="flex flex-col justify-center px-6 md:pl-16 md:pr-10 pt-28 pb-16 md:pt-0 md:pb-0">
+      {/* ── Main content ─────────────────────────────────────────────────── */}
+      <div className="relative z-10 flex flex-col min-h-[100dvh]">
 
-        {/* Label */}
+        {/* Padded zone: label + headline + CTAs */}
+        <div className="flex flex-col flex-1 px-6 md:pl-16 md:pr-8 pt-28 pb-8 md:pt-0 md:pb-0">
+
+          {/* Label — top */}
+          <motion.div
+            className="md:mt-[max(7rem,11vh)]"
+            initial={{ opacity: 0 }}
+            animate={ready ? { opacity: 1 } : {}}
+            transition={{ delay: d, duration: 0.6 }}
+          >
+            <ShimmerText
+              text="Light. Camera. Poetry."
+              className="font-sans uppercase block tracking-[0.22em] text-[11px] font-semibold"
+            />
+          </motion.div>
+
+          {/* Headline block — vertically centred */}
+          <div className="flex-1 flex flex-col justify-center">
+
+            {/* Main headline */}
+            <h1
+              className="font-serif text-white mb-7"
+              aria-label="Framing Poetry, One Moment at a Time."
+            >
+              {/* Line 1: FILLED — "Framing Poetry," */}
+              <span className="block overflow-hidden text-hero-xl">
+                <motion.span
+                  className="block"
+                  initial={{ y: '110%' }}
+                  animate={ready ? { y: '0%' } : {}}
+                  transition={{ delay: d + 0.32, duration: 0.95, ease }}
+                >
+                  Framing Poetry,
+                </motion.span>
+              </span>
+
+              {/* Animated gold divider */}
+              <motion.div
+                aria-hidden="true"
+                className="block my-4 md:my-5 origin-left"
+                style={{ height: 1, backgroundColor: 'rgba(200,175,120,0.45)', width: '100%' }}
+                initial={{ scaleX: 0 }}
+                animate={ready ? { scaleX: 1 } : {}}
+                transition={{ delay: d + 0.88, duration: 0.9, ease }}
+              />
+
+              {/* Line 2: OUTLINE — "One Moment" */}
+              <span className="block overflow-hidden text-hero-xl text-outline-white">
+                <motion.span
+                  className="block"
+                  initial={{ y: '110%' }}
+                  animate={ready ? { y: '0%' } : {}}
+                  transition={{ delay: d + 0.56, duration: 0.95, ease }}
+                >
+                  One Moment
+                </motion.span>
+              </span>
+
+              {/* Line 3: FILLED smaller — "at a Time." */}
+              <span
+                className="block overflow-hidden"
+                style={{ fontSize: 'clamp(2rem, 5.5vw, 6rem)', lineHeight: 0.92 }}
+              >
+                <motion.span
+                  className="block text-white/80"
+                  initial={{ y: '110%' }}
+                  animate={ready ? { y: '0%' } : {}}
+                  transition={{ delay: d + 0.74, duration: 0.95, ease }}
+                >
+                  at a Time.
+                </motion.span>
+              </span>
+            </h1>
+
+            {/* Body + stat row */}
+            <motion.div
+              className="flex items-end gap-8 mb-8"
+              initial={{ opacity: 0, y: 18 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: d + 1.2, duration: 0.8, ease }}
+            >
+              <p
+                className="font-sans text-white/55 max-w-[280px]"
+                style={{ fontSize: 15, lineHeight: 1.75 }}
+              >
+                A minimal photography studio capturing portraits, milestones, events, and stories — with emotion, light, and intention.
+              </p>
+
+              {/* Stat: 200+ clients */}
+              <div className="hidden sm:flex flex-col items-end flex-shrink-0 border-r border-white/12 pr-6">
+                <span className="font-serif text-white" style={{ fontSize: 34, fontWeight: 400, lineHeight: 1 }}>
+                  {ready && <CountUp target={200} suffix="+" duration={1500} />}
+                </span>
+                <span
+                  className="font-sans text-white/30 uppercase mt-1"
+                  style={{ fontSize: 9, letterSpacing: '0.2em' }}
+                >
+                  happy clients
+                </span>
+              </div>
+            </motion.div>
+
+            {/* CTAs */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-3"
+              initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }}
+              animate={ready ? { opacity: 1, clipPath: 'inset(0% 0 0 0)' } : {}}
+              transition={{ delay: d + 1.5, duration: 0.8, ease }}
+            >
+              <Button
+                as="a"
+                variant="hero-ghost"
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Book a Session
+              </Button>
+              <Button as="a" variant="hero-ghost" href="#stories">
+                View Stories
+              </Button>
+            </motion.div>
+
+          </div>{/* end headline block */}
+        </div>{/* end padded zone */}
+
+        {/* Marquee — full-width, no side padding */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={ready ? { opacity: 1 } : {}}
-          transition={{ delay: d, duration: 0.5 }}
-          className="mb-8"
+          transition={{ delay: d + 2.3, duration: 1 }}
         >
-          <SectionLabel text="Light. Camera. Poetry." light />
+          <MarqueeStrip />
         </motion.div>
 
-        {/* H1 */}
-        <div className="mb-8">
-          {ready && (
-            <AnimatedHeading
-              as="h1"
-              triggerOnMount
-              delay={d + 0.3}
-              className="font-serif text-white text-hero leading-[0.93] tracking-[-0.03em]"
-            >
-              Framing Poetry, One Moment at a Time.
-            </AnimatedHeading>
-          )}
-        </div>
+      </div>{/* end main content */}
 
-        {/* Body */}
-        <motion.p
-          className="font-sans text-white/60 mb-8 max-w-sm"
-          style={{ fontSize: 16, lineHeight: 1.75 }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: d + 1.2, duration: 0.8, ease }}
+      {/* ── Floating camera metadata (desktop) ───────────────────────────── */}
+      <motion.div
+        className="absolute right-8 md:right-14 bottom-28 z-20 hidden md:flex flex-col items-end gap-0.5"
+        initial={{ opacity: 0 }}
+        animate={ready ? { opacity: 1 } : {}}
+        transition={{ delay: d + 2.6, duration: 0.8 }}
+        aria-hidden="true"
+      >
+        <span
+          className="font-sans text-white/15 uppercase tracking-[0.25em]"
+          style={{ fontSize: 8 }}
         >
-          A minimal photography studio capturing portraits, milestones, events, and stories — with emotion, light, and intention.
-        </motion.p>
-
-        {/* Trust stat */}
-        <motion.div
-          className="mb-8 flex items-baseline gap-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: d + 1.35, duration: 0.8, ease }}
+          camera data
+        </span>
+        <span
+          className="font-sans text-white/30 tracking-[0.1em]"
+          style={{ fontSize: 11 }}
         >
-          <span
-            className="font-serif text-white"
-            style={{ fontSize: 36, fontWeight: 400, lineHeight: 1 }}
-          >
-            {ready && <CountUp target={200} suffix="+" duration={1500} />}
-          </span>
-          <span
-            className="font-sans text-white/40 uppercase"
-            style={{ fontSize: 11, letterSpacing: '0.18em', fontWeight: 500 }}
-          >
-            happy clients
-          </span>
-        </motion.div>
+          f/1.4&nbsp;&nbsp;·&nbsp;&nbsp;35mm&nbsp;&nbsp;·&nbsp;&nbsp;Lagos, NG
+        </span>
+        <div className="w-10 h-px bg-white/15 mt-1.5" />
+      </motion.div>
 
-        {/* CTAs */}
-        <motion.div
-          className="flex flex-col sm:flex-row gap-3"
-          initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }}
-          animate={ready ? { opacity: 1, clipPath: 'inset(0% 0 0 0)' } : {}}
-          transition={{ delay: d + 1.5, duration: 0.8, ease }}
-        >
-          <Button
-            as="a"
-            variant="hero-ghost"
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Book a Session
-          </Button>
-          <Button as="a" variant="hero-ghost" href="#stories">
-            View Stories
-          </Button>
-        </motion.div>
-        </div>{/* end left column */}
+      {/* ── Click zone over canvas (desktop) ─────────────────────────────── */}
+      {ready && (
+        <motion.button
+          type="button"
+          className="hidden md:block cursor-pointer absolute right-0 top-0 bottom-16 w-[42%] z-10"
+          onClick={() => open(heroPortrait)}
+          aria-label="View portrait — click to expand"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: d + 2.2, duration: 0.5 }}
+        />
+      )}
 
-        {/* Right column — empty; 3D canvas shows through from absolute layer */}
-        <div className="hidden md:block" aria-hidden="true" />
-      </div>{/* end grid */}
-
-      {/* ── Mobile background image ──────────────────────────────────────── */}
+      {/* ── Mobile background image ───────────────────────────────────────── */}
       <div
         className="md:hidden absolute inset-0 pointer-events-none"
         aria-hidden="true"
@@ -183,30 +283,9 @@ export function Hero({ ready }: HeroProps) {
           className="absolute inset-0"
           sizes="100vw"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.85)' }} />
+        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.88)' }} />
       </div>
 
-      {/* ── Scroll indicator ─────────────────────────────────────────────── */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 z-20"
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : {}}
-        transition={{ delay: d + 2, duration: 0.6 }}
-        aria-hidden="true"
-      >
-        <span
-          className="font-sans text-white/30 uppercase"
-          style={{ fontSize: 9, letterSpacing: '0.2em' }}
-        >
-          Scroll
-        </span>
-        <motion.div
-          className="w-[1px] bg-white/20"
-          style={{ height: 40 }}
-          animate={{ scaleY: [0, 1, 0], originY: 0 }}
-          transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut', delay: 0.5 }}
-        />
-      </motion.div>
     </section>
   )
 }

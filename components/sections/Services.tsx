@@ -1,115 +1,156 @@
 'use client'
 
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { useRef } from 'react'
+
+import { motion, useInView, useReducedMotion } from 'motion/react'
+
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
-import { staggerContainer, cardReveal } from '@/lib/animations'
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { WHATSAPP_URL, services } from '@/lib/data'
 import type { ServiceItem } from '@/types'
 
-function ServiceCard({ service }: { service: ServiceItem }) {
+function GoldAccent() {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, amount: 0.5 })
   const shouldReduce = useReducedMotion()
-  const rawX = useMotionValue(0)
-  const rawY = useMotionValue(0)
-  const spring = { stiffness: 200, damping: 22, mass: 0.5 }
-  const rotX = useSpring(useTransform(rawY, [-0.5, 0.5], [10, -10]), spring)
-  const rotY = useSpring(useTransform(rawX, [-0.5, 0.5], [-10, 10]), spring)
+  return (
+    <motion.div
+      ref={ref}
+      className="h-px origin-left mb-7"
+      style={{ width: 44, backgroundColor: 'rgba(200,175,120,0.65)' }}
+      initial={shouldReduce ? { scaleX: 1 } : { scaleX: 0 }}
+      animate={isInView || shouldReduce ? { scaleX: 1 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      aria-hidden="true"
+    />
+  )
+}
+
+function ServiceRow({ service, index }: { service: ServiceItem; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const shouldReduce = useReducedMotion()
 
   return (
     <motion.div
-      variants={cardReveal}
-      className="bg-surface p-8 flex flex-col group cursor-default"
-      style={{
-        border: '1px solid var(--border)',
-        transition: 'border-color 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s',
-        perspective: 600,
-        rotateX: shouldReduce ? undefined : rotX,
-        rotateY: shouldReduce ? undefined : rotY,
-      }}
-      whileHover={shouldReduce ? undefined : {
-        y: -4,
-        transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
-      }}
-      onMouseMove={shouldReduce ? undefined : (e) => {
-        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-        rawX.set((e.clientX - rect.left) / rect.width - 0.5)
-        rawY.set((e.clientY - rect.top) / rect.height - 0.5)
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement
-        el.style.borderColor = 'var(--charcoal)'
-        el.style.boxShadow = '0 8px 32px rgba(0,0,0,0.06)'
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement
-        el.style.borderColor = 'var(--border)'
-        el.style.boxShadow = 'none'
-        if (!shouldReduce) { rawX.set(0); rawY.set(0) }
-      }}
+      ref={ref}
+      className="group relative flex items-center gap-6 md:gap-14 py-9 md:py-11 border-b border-border"
+      initial={shouldReduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex justify-between items-start mb-6">
-        <service.Icon
-          size={20}
-          strokeWidth={1.5}
-          className="text-ink"
-          aria-hidden="true"
-        />
+      {/* Animated gold left bar */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-0.5 origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-out"
+        style={{ backgroundColor: 'rgba(200,175,120,0.75)' }}
+        aria-hidden="true"
+      />
+
+      {/* Large faint number — editorial anchor */}
+      <div
+        className="flex-shrink-0 w-14 md:w-20 xl:w-28 select-none"
+        aria-hidden="true"
+      >
         <span
-          className="font-sans text-muted uppercase"
-          style={{ fontSize: 11, letterSpacing: '0.2em' }}
+          className="font-serif text-ink block transition-opacity duration-300 group-hover:opacity-[0.18]"
+          style={{
+            fontSize: 'clamp(3rem, 5vw, 5.5rem)',
+            fontWeight: 400,
+            lineHeight: 1,
+            letterSpacing: '-0.04em',
+            opacity: 0.08,
+          }}
         >
           {service.number}
         </span>
       </div>
 
-      <h3
-        className="font-serif text-ink mb-3"
-        style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}
-      >
-        {service.title}
-      </h3>
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <h3
+          className="font-serif text-ink mb-2.5"
+          style={{
+            fontSize: 'clamp(1.25rem, 2.2vw, 1.75rem)',
+            fontWeight: 400,
+            lineHeight: 1.15,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          {service.title}
+        </h3>
+        <p
+          className="font-sans text-muted"
+          style={{ fontSize: 14, lineHeight: 1.8, maxWidth: 500 }}
+        >
+          {service.description}
+        </p>
+      </div>
 
-      <p
-        className="font-sans text-muted flex-1"
-        style={{ fontSize: 15, lineHeight: 1.7 }}
-      >
-        {service.description}
-      </p>
-
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-6 font-sans text-muted hover:text-ink transition-colors duration-300"
-        style={{ fontSize: 12, letterSpacing: '0.1em' }}
-        aria-label={`Book a ${service.title} session`}
-      >
-        — Book this session
-      </a>
+      {/* Right: icon + book link */}
+      <div className="flex-shrink-0 flex flex-col items-end gap-3">
+        <service.Icon
+          size={20}
+          strokeWidth={1.3}
+          className="text-muted group-hover:text-ink transition-colors duration-300"
+          aria-hidden="true"
+        />
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-sans text-muted hover:text-ink transition-colors duration-300 hidden sm:block"
+          style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+          aria-label={`Book a ${service.title} session`}
+        >
+          Book →
+        </a>
+      </div>
     </motion.div>
   )
 }
 
 export function Services() {
-  const shouldReduce = useReducedMotion()
-
   return (
     <section
+      // eslint-disable-next-line react/no-static-id -- navigation anchor, must be a predictable hash target
       id="services"
-      className="section-pad"
+      className="section-pad relative overflow-hidden"
       style={{ backgroundColor: '#FFFFFF' }}
       aria-labelledby="services-heading"
     >
-      <div className="max-w-container mx-auto px-6 md:px-8">
-        {/* Header */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      {/* Section number watermark */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-6 right-0 select-none pointer-events-none overflow-hidden leading-none"
+        style={{ zIndex: 0 }}
+      >
+        <span
+          className="font-serif text-ink block"
+          style={{
+            fontSize: 'clamp(160px, 22vw, 300px)',
+            fontWeight: 400,
+            opacity: 0.025,
+            letterSpacing: '-0.05em',
+            lineHeight: 1,
+          }}
+        >
+          02
+        </span>
+      </div>
+
+      <div className="relative z-10 max-w-container mx-auto px-6 md:px-8">
+
+        {/* Header: heading left, descriptor right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 items-end mb-16 md:mb-20">
           <div>
             <Reveal>
-              <SectionLabel text="Services" className="mb-6" />
+              <SectionLabel text="Services" />
             </Reveal>
+            <GoldAccent />
             <AnimatedHeading
+              // eslint-disable-next-line react/no-static-id -- aria-labelledby reference, must be predictable
               id="services-heading"
               as="h2"
               className="font-serif text-ink text-section"
@@ -118,31 +159,27 @@ export function Services() {
               Photography, Made Personal.
             </AnimatedHeading>
           </div>
-          <Reveal delay={0.1}>
+
+          <Reveal delay={0.15}>
             <p
-              className="font-sans text-muted self-end md:pt-8"
-              style={{ fontSize: 16, lineHeight: 1.75 }}
+              className="font-sans text-muted lg:max-w-[260px] lg:pb-1"
+              style={{ fontSize: 15, lineHeight: 1.8 }}
             >
-              Every session is built around you — your story, your moment, your meaning. We work across four areas of photography, all with the same intention.
+              Every session is built around you — your story, your moment, your meaning.
             </p>
           </Reveal>
         </div>
 
-        {/* Cards */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border"
-          variants={staggerContainer(0.08, 0.1)}
-          initial={shouldReduce ? 'visible' : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+        {/* Service list */}
+        <div>
+          <div className="border-t border-border" />
+          {services.map((service, i) => (
+            <ServiceRow key={service.id} service={service} index={i} />
           ))}
-        </motion.div>
+        </div>
 
         {/* CTA */}
-        <Reveal delay={0.2} className="mt-12 flex justify-center">
+        <Reveal delay={0.2} className="mt-14">
           <Button
             as="a"
             variant="primary"
@@ -153,6 +190,7 @@ export function Services() {
             Book Your Session
           </Button>
         </Reveal>
+
       </div>
     </section>
   )

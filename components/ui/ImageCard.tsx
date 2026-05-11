@@ -16,6 +16,7 @@ interface ImageCardProps {
   aspectRatio?: string
   objectPosition?: string
   priority?: boolean
+  onClick?: () => void
 }
 
 export function ImageCard({
@@ -28,13 +29,21 @@ export function ImageCard({
   aspectRatio = '2/3',
   objectPosition = 'top',
   priority = false,
+  onClick,
 }: ImageCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
   const shouldReduce = useReducedMotion()
 
+  const Wrapper = onClick ? 'button' : 'div'
+
   return (
-    <div ref={ref} className={cn('relative overflow-hidden group', className)}>
+    <Wrapper
+      ref={ref as never}
+      type={onClick ? 'button' : undefined}
+      className={cn('relative overflow-hidden group', onClick && 'block w-full cursor-pointer text-left', className)}
+      onClick={onClick}
+    >
       {/* Clip-path image reveal */}
       <motion.div
         className="w-full overflow-hidden"
@@ -96,6 +105,6 @@ export function ImageCard({
           </div>
         </div>
       )}
-    </div>
+    </Wrapper>
   )
 }

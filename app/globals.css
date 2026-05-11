@@ -79,6 +79,19 @@ body::before {
   font-size: clamp(2.5rem, 6vw, 6rem);
 }
 
+/* God-mode hero headline — oversized editorial serif */
+.text-hero-xl {
+  font-size: clamp(2.8rem, 9vw, 9.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
+/* Outline text treatment — editorial fill/stroke contrast */
+.text-outline-white {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+  color: transparent;
+}
+
 .text-section {
   font-size: clamp(2rem, 4vw, 3.5rem);
 }
@@ -163,4 +176,77 @@ body::before {
 .nav-link:hover::after,
 .nav-link.active::after {
   width: 100%;
+}
+
+
+/* Lightbox */
+.lb-img {
+  display: block;
+  max-width: min(88vw, 780px);
+  max-height: 76vh;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+.lb-title  { font-size: 20px; font-weight: 400; line-height: 1.2; }
+.lb-caption { font-size: 10px; letter-spacing: 0.22em; }
+.lb-dot {
+  height: 5px;
+  width: 5px;
+  border-radius: 999px;
+  background-color: rgba(255,255,255,0.25);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+.lb-dot[data-active='true'] {
+  width: 20px;
+  background-color: rgba(255,255,255,0.8);
+}
+
+/* ── ShimmerText overlay ─────────────────────────────────────────────────── */
+.shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.85) 50%,
+    transparent 75%
+  );
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── BorderBeam ──────────────────────────────────────────────────────────── */
+@property --beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-beam-spin {
+  from { --beam-angle: 0deg; }
+  to   { --beam-angle: 360deg; }
+}
+
+.border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1.5px solid transparent;
+}
+
+.border-beam-active {
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    conic-gradient(
+      from calc(270deg + var(--beam-angle)),
+      transparent 60%,
+      rgba(200, 175, 120, 0.65) 80%,
+      transparent 95%
+    ) border-box;
+  animation: border-beam-spin 10s linear infinite;
 }
