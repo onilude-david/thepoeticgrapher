@@ -65,10 +65,31 @@ export const portfolioItems: PortfolioItem[] = [
     category: 'Portrait',
   },
   {
+    id: 'portrait-03',
+    title: 'The Light',
+    caption: 'Portrait Session · Lagos',
+    image: '/images/Portraits/IMG_9797-2.jpeg',
+    category: 'Portrait',
+  },
+  {
+    id: 'portrait-04',
+    title: 'Presence',
+    caption: 'Portrait Session · Lagos',
+    image: '/images/Portraits/IMG_9848.jpeg',
+    category: 'Portrait',
+  },
+  {
     id: 'event-01',
     title: 'The Gathering',
     caption: 'Event Documentation',
     image: '/images/events/IMG_0422.jpeg',
+    category: 'Event',
+  },
+  {
+    id: 'event-02',
+    title: 'In the Room',
+    caption: 'Event Documentation',
+    image: '/images/events/IMG_0417.jpeg',
     category: 'Event',
   },
 ]

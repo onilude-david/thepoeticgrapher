@@ -14,6 +14,7 @@ interface ImageCardProps {
   showArrow?: boolean
   className?: string
   aspectRatio?: string
+  objectPosition?: string
   priority?: boolean
 }
 
@@ -25,6 +26,7 @@ export function ImageCard({
   showArrow = false,
   className,
   aspectRatio = '2/3',
+  objectPosition = 'top',
   priority = false,
 }: ImageCardProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -54,6 +56,7 @@ export function ImageCard({
             className={cn(
               'object-cover img-bw transition-transform duration-500 group-hover:scale-[1.04]'
             )}
+            style={{ objectPosition }}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             priority={priority}
           />

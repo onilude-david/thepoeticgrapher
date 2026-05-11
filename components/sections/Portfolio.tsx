@@ -47,6 +47,7 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
             alt={`${item.title} — ${item.caption}`}
             fill
             className="object-cover img-bw transition-transform duration-700 group-hover:scale-[1.04]"
+            style={{ objectPosition: 'top' }}
             sizes="(max-width: 1024px) 85vw, 62vw"
           />
         </motion.div>
