@@ -9,28 +9,26 @@ import { MarqueeStrip } from '@/components/ui/MarqueeStrip'
 import { ParallaxImage } from '@/components/ui/ParallaxImage'
 import { ShimmerText } from '@/components/ui/ShimmerText'
 import { useLightbox } from '@/contexts/LightboxContext'
+import { useReady } from '@/contexts/ReadyContext'
 import { WHATSAPP_URL } from '@/lib/data'
 
 const ease = [0.22, 1, 0.36, 1] as const
+const HERO_IMAGE = '/images/Portraits/IMG_9777-2.jpeg'
 
 const heroPortrait = [{
-  src: '/images/Portraits/IMG_9777-2.jpeg',
+  src: HERO_IMAGE,
   alt: 'Portrait — ThePoeticGrapher Studios',
   title: 'ThePoeticGrapher',
   caption: 'Portrait Session · Lagos',
 }]
 
-interface HeroProps {
-  ready: boolean
-}
-
-export function Hero({ ready }: HeroProps) {
+export function Hero() {
   const d = 0.1
   const { open } = useLightbox()
+  const ready = useReady()
 
   return (
     <section
-      // eslint-disable-next-line react/no-static-id -- navigation anchor, must be a predictable hash target
       id="top"
       data-theme="dark"
       className="relative full-height w-full overflow-hidden"
@@ -97,7 +95,7 @@ export function Hero({ ready }: HeroProps) {
       <div className="relative z-10 flex flex-col min-h-[100dvh]">
 
         {/* Padded zone: label + headline + CTAs */}
-        <div className="flex flex-col flex-1 px-6 md:pl-16 md:pr-8 pt-28 pb-8 md:pt-0 md:pb-0">
+        <div className="flex flex-1 flex-col px-6 pb-8 pt-28 md:pb-0 md:pl-16 md:pr-8 md:pt-0">
 
           {/* Label — top */}
           <motion.div
@@ -172,14 +170,14 @@ export function Hero({ ready }: HeroProps) {
 
             {/* Body + stat row */}
             <motion.div
-              className="flex items-end gap-8 mb-8"
+              className="mb-8 flex items-end gap-8"
               initial={{ opacity: 0, y: 18 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: d + 1.2, duration: 0.8, ease }}
             >
               <p
-                className="font-sans text-white/55 max-w-[280px]"
-                style={{ fontSize: 15, lineHeight: 1.75 }}
+                className="max-w-[320px] font-sans text-white/60 md:max-w-[280px]"
+                style={{ fontSize: 15, lineHeight: 1.7 }}
               >
                 A minimal photography studio capturing portraits, milestones, events, and stories — with emotion, light, and intention.
               </p>
@@ -200,7 +198,7 @@ export function Hero({ ready }: HeroProps) {
 
             {/* CTAs */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-3"
+              className="flex flex-col gap-3 sm:flex-row"
               initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }}
               animate={ready ? { opacity: 1, clipPath: 'inset(0% 0 0 0)' } : {}}
               transition={{ delay: d + 1.5, duration: 0.8, ease }}
@@ -211,10 +209,11 @@ export function Hero({ ready }: HeroProps) {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="w-full sm:w-auto"
               >
                 Book a Session
               </Button>
-              <Button as="a" variant="hero-ghost" href="#stories">
+              <Button as="a" variant="hero-ghost" href="#stories" className="w-full sm:w-auto">
                 View Stories
               </Button>
             </motion.div>
@@ -276,14 +275,22 @@ export function Hero({ ready }: HeroProps) {
         style={{ zIndex: 0 }}
       >
         <ParallaxImage
-          src="/images/Portraits/IMG_9777-2.jpeg"
+          src={HERO_IMAGE}
           alt="Portrait"
           speed={0}
           priority
           className="absolute inset-0"
-          sizes="100vw"
+          sizes="130vw"
+          objectPosition="58% 42%"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.88)' }} />
+        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.76)' }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(8,8,8,0.68) 0%, rgba(8,8,8,0.32) 42%, rgba(8,8,8,0.88) 100%), linear-gradient(to right, rgba(8,8,8,0.78) 0%, transparent 70%)',
+          }}
+        />
       </div>
 
     </section>

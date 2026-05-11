@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { useState } from 'react'
+import { motion } from 'motion/react'
 import { Plus } from 'lucide-react'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
@@ -22,7 +22,7 @@ function AccordionItem({ question, answer, isOpen, onToggle, index }: AccordionI
 
   return (
     <div
-      className="border-b border-border"
+      className="border-b border-border transition-colors duration-300 hover:bg-white/45"
       style={{ borderColor: 'var(--border)' }}
     >
       <button
@@ -30,11 +30,11 @@ function AccordionItem({ question, answer, isOpen, onToggle, index }: AccordionI
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-6 text-left group"
+        className="group flex w-full items-center justify-between py-6 text-left"
         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
       >
         <span
-          className="font-serif text-ink pr-8"
+          className="pr-8 font-serif text-ink transition-colors duration-300 group-hover:text-black"
           style={{ fontSize: 20, fontWeight: 400, lineHeight: 1.3 }}
         >
           {question}
@@ -42,7 +42,7 @@ function AccordionItem({ question, answer, isOpen, onToggle, index }: AccordionI
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="flex-shrink-0"
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center border border-border transition-colors duration-300 group-hover:border-[#c8af78]/70"
           aria-hidden="true"
         >
           <Plus size={20} strokeWidth={1.5} className="text-ink" />
@@ -77,12 +77,16 @@ export function FAQ() {
 
   return (
     <section
-      className="section-pad"
+      className="section-pad relative overflow-hidden"
       style={{ backgroundColor: '#FAF9F6' }}
       aria-labelledby="faq-heading"
     >
+      <div
+        aria-hidden="true"
+        className="absolute -left-32 top-20 h-80 w-80 rounded-full border border-[#c8af78]/15"
+      />
       <div className="max-w-container mx-auto px-6 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+        <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-[4fr_6fr] md:gap-20">
           {/* Left: heading */}
           <div>
             <Reveal>
@@ -107,6 +111,15 @@ export function FAQ() {
               >
                 If your question isn&rsquo;t here, just reach out — we&rsquo;re easy to talk to.
               </p>
+            </Reveal>
+            <Reveal delay={0.18} className="mt-8">
+              <a
+                href="#contact"
+                className="font-sans uppercase text-ink underline decoration-[#c8af78]/60 underline-offset-8 transition-colors hover:text-muted"
+                style={{ fontSize: 10, letterSpacing: '0.18em', fontWeight: 600 }}
+              >
+                Talk to us directly
+              </a>
             </Reveal>
           </div>
 

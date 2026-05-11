@@ -71,7 +71,7 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="text-white p-2 -mr-2"
+              className="-mr-2 min-h-11 min-w-11 p-2 text-white"
               aria-label="Close navigation menu"
             >
               <X size={22} strokeWidth={1.5} />
@@ -79,7 +79,7 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
           </div>
 
           {/* Links */}
-          <nav className="flex flex-col justify-center flex-1 px-10 pb-20">
+          <nav className="flex flex-1 flex-col justify-center px-8 pb-24 sm:px-10 sm:pb-20">
             <ul className="list-none space-y-2">
               {links.map((link, i) => (
                 <motion.li
@@ -96,7 +96,7 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
                     href={link.href}
                     onClick={onClose}
                     className="font-serif text-white block py-2 hover:text-white/60 transition-colors duration-300"
-                    style={{ fontSize: 48, fontWeight: 400, lineHeight: 1.1 }}
+                    style={{ fontSize: 'clamp(2.5rem, 12vw, 3rem)', fontWeight: 400, lineHeight: 1.1 }}
                   >
                     {link.label}
                   </a>

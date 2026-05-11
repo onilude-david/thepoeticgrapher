@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useInView } from 'motion/react'
+import { useInView, useReducedMotion } from 'motion/react'
 
 interface CountUpProps {
   target: number
@@ -18,16 +18,13 @@ export function CountUp({
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const shouldReduce = useReducedMotion()
   const [count, setCount] = useState(0)
   const started = useRef(false)
 
   useEffect(() => {
     if (!isInView || started.current) return
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setCount(target)
-      return
-    }
+    if (shouldReduce) return
 
     started.current = true
     const start = performance.now()
@@ -44,11 +41,13 @@ export function CountUp({
     }
 
     requestAnimationFrame(tick)
-  }, [isInView, target, duration])
+  }, [isInView, shouldReduce, target, duration])
+
+  const displayCount = shouldReduce && isInView ? target : count
 
   return (
     <span ref={ref} className={className}>
-      {count}
+      {displayCount}
       {suffix}
     </span>
   )

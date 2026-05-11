@@ -54,7 +54,7 @@ export function Button({
   }
 
   const base =
-    'inline-flex items-center justify-center font-sans uppercase cursor-pointer select-none'
+    'inline-flex min-h-11 items-center justify-center font-sans uppercase cursor-pointer select-none active:scale-[0.97]'
   const variantClass: Record<ButtonVariant, string> = {
     primary: 'bg-ink text-white border border-ink hover:bg-white hover:text-ink',
     ghost: 'bg-transparent text-ink border border-ink hover:bg-ink hover:text-white',

@@ -81,9 +81,15 @@ body::before {
 
 /* God-mode hero headline — oversized editorial serif */
 .text-hero-xl {
-  font-size: clamp(2.8rem, 9vw, 9.5rem);
+  font-size: clamp(2.65rem, 18vw, 9.5rem);
   line-height: 0.88;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .text-hero-xl {
+    font-size: clamp(2.8rem, 9vw, 9.5rem);
+  }
 }
 
 /* Outline text treatment — editorial fill/stroke contrast */
@@ -178,12 +184,22 @@ body::before {
   width: 100%;
 }
 
+.custom-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor {
+    display: block;
+  }
+}
+
 
 /* Lightbox */
 .lb-img {
   display: block;
-  max-width: min(88vw, 780px);
-  max-height: 76vh;
+  max-width: min(90vw, 780px);
+  max-height: 70dvh;
   width: auto !important;
   height: auto !important;
   object-fit: contain;
@@ -200,6 +216,13 @@ body::before {
 .lb-dot[data-active='true'] {
   width: 20px;
   background-color: rgba(255,255,255,0.8);
+}
+
+@media (min-width: 768px) {
+  .lb-img {
+    max-width: min(88vw, 780px);
+    max-height: 76vh;
+  }
 }
 
 /* ── ShimmerText overlay ─────────────────────────────────────────────────── */

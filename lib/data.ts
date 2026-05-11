@@ -52,44 +52,44 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     id: 'portrait-01',
-    title: 'Solitude',
-    caption: 'Personal Session · Lagos',
-    image: '/images/Portraits/IMG_9785-2.jpeg',
+    title: 'Poise',
+    caption: 'Studio Portrait · Lagos',
+    image: '/images/Portraits/IMG_0033.jpg',
     category: 'Portrait',
   },
   {
     id: 'portrait-02',
-    title: 'Still',
-    caption: 'Portrait Session · Lagos',
-    image: '/images/Portraits/IMG_9790-2.jpeg',
+    title: 'Quiet Confidence',
+    caption: 'Personal Session · Lagos',
+    image: '/images/Portraits/IMG_8830.jpeg',
     category: 'Portrait',
   },
   {
-    id: 'portrait-03',
-    title: 'The Light',
-    caption: 'Portrait Session · Lagos',
-    image: '/images/Portraits/IMG_9797-2.jpeg',
-    category: 'Portrait',
+    id: 'family-01',
+    title: 'Waiting Joy',
+    caption: 'Family Portrait',
+    image: '/images/Portraits/IMG_9609.jpg',
+    category: 'Family',
   },
   {
-    id: 'portrait-04',
-    title: 'Presence',
-    caption: 'Portrait Session · Lagos',
-    image: '/images/Portraits/IMG_9848.jpeg',
-    category: 'Portrait',
+    id: 'family-02',
+    title: 'First Blessing',
+    caption: 'Family Story',
+    image: '/images/Portraits/IMG_9595.jpeg',
+    category: 'Family',
   },
   {
     id: 'event-01',
-    title: 'The Gathering',
+    title: 'Rhythm',
     caption: 'Event Documentation',
-    image: '/images/events/IMG_0422.jpeg',
+    image: '/images/events/IMG_1105.jpeg',
     category: 'Event',
   },
   {
     id: 'event-02',
-    title: 'In the Room',
+    title: 'Street Color',
     caption: 'Event Documentation',
-    image: '/images/events/IMG_0417.jpeg',
+    image: '/images/IMG_9069.jpeg',
     category: 'Event',
   },
 ]
@@ -151,14 +151,22 @@ export const faqItems: FAQItem[] = [
 
 export const testimonial: TestimonialItem = {
   quote:
-    'ThePoeticGrapher didn\'t just take pictures. He captured the feeling behind the moment. Every frame felt intentional, emotional, and timeless.',
+    'ThePoeticGrapher didn\'t just take pictures. She captured the feeling behind the moment. Every frame felt intentional, emotional, and timeless.',
   client: 'Adaeze O.',
   session: 'Convocation Portrait',
-  image: '/images/Portraits/IMG_9903.jpeg',
+  image: '/images/Portraits/IMG_0033.jpg',
 }
 
 // Contact details
-export const WHATSAPP_URL =
-  'https://wa.me/2348000000000?text=Hi%2C%20I%27d%20like%20to%20book%20a%20photography%20session.' // TODO: Replace WhatsApp number
-export const EMAIL = 'hello@thepoeticgrapher.com'
+const WHATSAPP_MESSAGE = [
+  'Hi ThePoeticGrapher, I would like to book a photography session.',
+  '',
+  'Session type:',
+  'Preferred date:',
+  'Location:',
+  'A little about the moment:',
+].join('\n')
+
+export const WHATSAPP_URL = `https://wa.me/2347050377154?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
+export const EMAIL = 'thepoeticgrapher@gmail.com'
 export const INSTAGRAM_URL = 'https://instagram.com/thepoeticgrapher'

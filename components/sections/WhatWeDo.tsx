@@ -12,6 +12,8 @@ import { Tilt3D } from '@/components/ui/Tilt3D'
 import { useLightbox } from '@/contexts/LightboxContext'
 import { WHATSAPP_URL } from '@/lib/data'
 
+const ease = [0.22, 1, 0.36, 1] as const
+
 const gridImages = [
   {
     src: '/images/Graduation%20Portrait/_Q7A9135-.jpg',
@@ -20,21 +22,21 @@ const gridImages = [
     caption: 'Convocation Portrait',
   },
   {
-    src: '/images/Portraits/IMG_9787-2.jpeg',
-    alt: 'Personal portrait session — soft natural light on a subject at ease',
-    title: 'Solitude',
-    caption: 'Personal Session',
+    src: '/images/Portraits/IMG_0033.jpg',
+    alt: 'Studio portrait — a quiet side gaze with expressive styling',
+    title: 'Poise',
+    caption: 'Studio Portrait',
   },
   {
-    src: '/images/Portraits/IMG_9793-2.jpeg',
-    alt: 'Portrait session — an honest, unhurried moment between subject and light',
-    title: 'Still',
-    caption: 'Portrait Session',
+    src: '/images/Portraits/IMG_9609.jpg',
+    alt: 'Family maternity portrait — a father holding a quiet moment close',
+    title: 'Waiting Joy',
+    caption: 'Family Portrait',
   },
   {
-    src: '/images/events/IMG_0368.jpeg',
-    alt: 'Event documentation — guests gathered in celebration, a moment preserved',
-    title: 'The Gathering',
+    src: '/images/events/IMG_1105.jpeg',
+    alt: 'Event documentation — a drummer mid-performance, captured in motion',
+    title: 'Rhythm',
     caption: 'Event Documentation',
   },
 ]
@@ -59,6 +61,125 @@ function GoldAccent() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       aria-hidden="true"
     />
+  )
+}
+
+function MobileStats() {
+  return (
+    <Reveal delay={0.08}>
+      <div className="mb-12 grid grid-cols-3 divide-x divide-border border-y border-border py-4 md:hidden">
+        {STATS.map(({ value, label }) => (
+          <div key={label} className="px-3 text-center">
+            <span
+              className="block font-serif text-ink"
+              style={{ fontSize: 22, fontWeight: 400, lineHeight: 1 }}
+            >
+              {value}
+            </span>
+            <span
+              className="mt-1 block font-sans uppercase text-muted"
+              style={{ fontSize: 8, letterSpacing: '0.18em' }}
+            >
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </Reveal>
+  )
+}
+
+function ImageCluster({ onOpen }: { onOpen: (index: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, amount: 0.22 })
+  const shouldReduce = useReducedMotion()
+
+  return (
+    <motion.div
+      ref={ref}
+      className="relative"
+      initial={shouldReduce ? false : { opacity: 0, y: 44, rotateX: 10 }}
+      animate={isInView || shouldReduce ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+      transition={{ duration: 0.9, ease }}
+      style={{ transformPerspective: 1000 }}
+    >
+      <motion.div
+        aria-hidden="true"
+        className="absolute -left-4 top-8 hidden h-28 w-28 rounded-full border border-[#c8af78]/25 md:block"
+        initial={shouldReduce ? false : { opacity: 0, scale: 0.7, rotate: -20 }}
+        animate={isInView || shouldReduce ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+        transition={{ delay: 0.18, duration: 0.9, ease }}
+      />
+      <motion.div
+        aria-hidden="true"
+        className="absolute -right-7 bottom-16 hidden h-40 w-40 rounded-full border border-ink/10 md:block"
+        initial={shouldReduce ? false : { opacity: 0, scale: 0.85, rotate: 18 }}
+        animate={isInView || shouldReduce ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+        transition={{ delay: 0.26, duration: 1, ease }}
+      />
+
+      <div className="grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 md:gap-4">
+        <motion.div
+          className="flex flex-col gap-3 md:gap-4"
+          initial={shouldReduce ? false : { y: 26 }}
+          animate={isInView || shouldReduce ? { y: 0 } : {}}
+          transition={{ delay: 0.08, duration: 0.85, ease }}
+        >
+          <Tilt3D intensity={6}>
+            <ImageCard
+              src={gridImages[0].src}
+              alt={gridImages[0].alt}
+              title={gridImages[0].title}
+              caption={gridImages[0].caption}
+              aspectRatio="3/4"
+              showArrow
+              onClick={() => onOpen(0)}
+            />
+          </Tilt3D>
+          <Tilt3D intensity={6}>
+            <ImageCard
+              src={gridImages[2].src}
+              alt={gridImages[2].alt}
+              title={gridImages[2].title}
+              caption={gridImages[2].caption}
+              aspectRatio="4/5"
+              showArrow
+              onClick={() => onOpen(2)}
+            />
+          </Tilt3D>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-col gap-3 min-[460px]:mt-12 md:mt-16 md:gap-4"
+          initial={shouldReduce ? false : { y: -18 }}
+          animate={isInView || shouldReduce ? { y: 0 } : {}}
+          transition={{ delay: 0.16, duration: 0.85, ease }}
+        >
+          <Tilt3D intensity={6}>
+            <ImageCard
+              src={gridImages[1].src}
+              alt={gridImages[1].alt}
+              title={gridImages[1].title}
+              caption={gridImages[1].caption}
+              aspectRatio="4/5"
+              showArrow
+              onClick={() => onOpen(1)}
+            />
+          </Tilt3D>
+          <Tilt3D intensity={6}>
+            <ImageCard
+              src={gridImages[3].src}
+              alt={gridImages[3].alt}
+              title={gridImages[3].title}
+              caption={gridImages[3].caption}
+              aspectRatio="3/4"
+              showArrow
+              onClick={() => onOpen(3)}
+            />
+          </Tilt3D>
+        </motion.div>
+      </div>
+    </motion.div>
   )
 }
 
@@ -92,6 +213,12 @@ export function WhatWeDo() {
         </span>
       </div>
 
+      <div
+        aria-hidden="true"
+        className="absolute left-0 top-1/2 h-px w-full bg-gradient-to-r from-transparent via-[#c8af78]/20 to-transparent"
+        style={{ zIndex: 0 }}
+      />
+
       <div className="relative z-10 max-w-container mx-auto px-6 md:px-8">
 
         {/* Header row: label + stats */}
@@ -123,11 +250,13 @@ export function WhatWeDo() {
           </Reveal>
         </div>
 
+        <MobileStats />
+
         {/* Main 2-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[5fr_6fr] gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[5fr_6fr] lg:gap-20">
 
           {/* ── Left: Content ─────────────────────────────────────────── */}
-          <div>
+          <div className="lg:max-w-[460px]">
             <GoldAccent />
 
             <AnimatedHeading
@@ -158,9 +287,8 @@ export function WhatWeDo() {
             {/* Pull quote */}
             <Reveal delay={0.2}>
               <blockquote
-                className="font-serif text-ink my-8 pl-5"
+                className="my-8 border-l-2 border-[#c8af78]/60 pl-5 font-serif text-ink"
                 style={{
-                  borderLeft: '2px solid rgba(200,175,120,0.6)',
                   fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
                   lineHeight: 1.4,
                   fontStyle: 'italic',
@@ -180,6 +308,7 @@ export function WhatWeDo() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="w-full sm:w-auto"
               >
                 Book Your Session
               </Button>
@@ -187,61 +316,7 @@ export function WhatWeDo() {
           </div>
 
           {/* ── Right: Masonry image grid ──────────────────────────────── */}
-          <div className="grid grid-cols-2 gap-3 md:gap-4 items-start">
-
-            {/* Column 1: images 0 and 2 */}
-            <div className="flex flex-col gap-3 md:gap-4">
-              <Tilt3D intensity={6}>
-                <ImageCard
-                  src={gridImages[0].src}
-                  alt={gridImages[0].alt}
-                  title={gridImages[0].title}
-                  caption={gridImages[0].caption}
-                  aspectRatio="3/4"
-                  showArrow
-                  onClick={() => open(gridImages, 0)}
-                />
-              </Tilt3D>
-              <Tilt3D intensity={6}>
-                <ImageCard
-                  src={gridImages[2].src}
-                  alt={gridImages[2].alt}
-                  title={gridImages[2].title}
-                  caption={gridImages[2].caption}
-                  aspectRatio="4/5"
-                  showArrow
-                  onClick={() => open(gridImages, 2)}
-                />
-              </Tilt3D>
-            </div>
-
-            {/* Column 2: images 1 and 3 — offset downward for masonry rhythm */}
-            <div className="flex flex-col gap-3 md:gap-4 mt-12 md:mt-16">
-              <Tilt3D intensity={6}>
-                <ImageCard
-                  src={gridImages[1].src}
-                  alt={gridImages[1].alt}
-                  title={gridImages[1].title}
-                  caption={gridImages[1].caption}
-                  aspectRatio="4/5"
-                  showArrow
-                  onClick={() => open(gridImages, 1)}
-                />
-              </Tilt3D>
-              <Tilt3D intensity={6}>
-                <ImageCard
-                  src={gridImages[3].src}
-                  alt={gridImages[3].alt}
-                  title={gridImages[3].title}
-                  caption={gridImages[3].caption}
-                  aspectRatio="3/4"
-                  showArrow
-                  onClick={() => open(gridImages, 3)}
-                />
-              </Tilt3D>
-            </div>
-
-          </div>
+          <ImageCluster onOpen={(index) => open(gridImages, index)} />
         </div>
 
       </div>

@@ -67,7 +67,7 @@ export function Bg3D({ variant = 'light', className }: Bg3DProps) {
   return (
     <div
       ref={ref}
-      className={cn('absolute inset-0 pointer-events-none overflow-hidden select-none', className)}
+      className={cn('absolute inset-0 hidden pointer-events-none overflow-hidden select-none sm:block', className)}
       aria-hidden="true"
     >
       {/* Large ring — top right */}

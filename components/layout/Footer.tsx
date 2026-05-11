@@ -1,4 +1,4 @@
-import { Instagram, MessageCircle, Mail } from 'lucide-react'
+import { Instagram, MessageCircle, Mail, ArrowUpRight } from 'lucide-react'
 import { EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from '@/lib/data'
 
 export function Footer() {
@@ -7,7 +7,11 @@ export function Footer() {
       id="contact"
       data-theme="dark"
       className="relative overflow-hidden"
-      style={{ backgroundColor: '#080808', borderTop: '1px solid #2A2A2A' }}
+      style={{
+        background:
+          'radial-gradient(circle at 72% 18%, rgba(200,175,120,0.11), transparent 24%), #080808',
+        borderTop: '1px solid #2A2A2A',
+      }}
     >
       {/* Background wordmark */}
       <div
@@ -30,9 +34,32 @@ export function Footer() {
         </span>
       </div>
 
-      <div className="relative z-10 max-w-container mx-auto px-6 md:px-8 pt-20 pb-10">
+      <div className="relative z-10 max-w-container mx-auto px-6 pb-28 pt-20 md:px-8 md:pb-10">
+        <div className="mb-16 border-y border-white/10 py-8 md:py-10">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <h2
+              className="font-serif text-white"
+              style={{ fontSize: 'clamp(2.35rem, 7vw, 5.5rem)', fontWeight: 400, lineHeight: 0.95, letterSpacing: '0' }}
+            >
+              Let&rsquo;s Frame
+              <br />
+              Your Story.
+            </h2>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 items-center justify-center gap-3 border border-white/25 px-6 font-sans text-white transition-colors duration-300 hover:bg-white hover:text-ink"
+              style={{ fontSize: 10, letterSpacing: '0.18em', fontWeight: 600, textTransform: 'uppercase' }}
+            >
+              Start a Booking
+              <ArrowUpRight size={14} strokeWidth={1.5} />
+            </a>
+          </div>
+        </div>
+
         {/* Top 3-column grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 pb-16">
+        <div className="grid grid-cols-1 gap-12 pb-16 md:grid-cols-3 md:gap-8">
           {/* Col 1: Heading */}
           <div>
             <p
@@ -49,6 +76,12 @@ export function Footer() {
               <br />
               Your Story.
             </h2>
+            <p
+              className="mt-5 max-w-xs font-sans text-white/35"
+              style={{ fontSize: 13, lineHeight: 1.7 }}
+            >
+              Portraits, milestones, families, and events across Lagos and beyond.
+            </p>
           </div>
 
           {/* Col 2: Body + email */}

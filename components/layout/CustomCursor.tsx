@@ -12,7 +12,7 @@ export function CustomCursor() {
   const raf = useRef<number>(0)
 
   useEffect(() => {
-    if (!window.matchMedia('(hover: hover)').matches) return
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
 
     function onMove(e: MouseEvent) {
       pos.current = { x: e.clientX, y: e.clientY }
@@ -72,7 +72,7 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9998]"
+        className="custom-cursor fixed left-0 top-0 z-[9998] pointer-events-none"
         style={{
           width: 8,
           height: 8,
@@ -84,7 +84,7 @@ export function CustomCursor() {
       />
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9997]"
+        className="custom-cursor fixed left-0 top-0 z-[9997] pointer-events-none"
         style={{
           width: isHovering ? 56 : 36,
           height: isHovering ? 56 : 36,

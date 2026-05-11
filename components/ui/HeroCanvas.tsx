@@ -34,6 +34,7 @@ const FRAG = /* glsl */ `
   uniform float     uAlpha;
   uniform float     uColorize; // 1.0 = full color, 0.0 = B&W
   uniform float     uReveal;   // 0.0 = hidden, 1.0 = fully revealed (scan top→bottom)
+  uniform float     uWarmth;
   uniform vec2      uMouse;
   varying vec2      vUv;
 
@@ -59,14 +60,14 @@ const FRAG = /* glsl */ `
 
     // Grayscale + cinematic S-curve
     float g = dot(col.rgb, vec3(0.299, 0.587, 0.114));
-    g = clamp(g * 1.03 * 0.92, 0.0, 1.0);
+    g = clamp(g * 1.06 * 0.94, 0.0, 1.0);
     g = g * g * (3.0 - 2.0 * g);
     g = mix(g * 0.95, g, smoothstep(0.2, 0.8, g));
 
     // Film grain (2-layer: coarse + fine)
     float grain  = hash(vUv + fract(uTime * 0.0013)) * 2.0 - 1.0;
     float grain2 = hash(vUv * 2.7 + fract(uTime * 0.0019)) * 2.0 - 1.0;
-    g += grain * 0.028 + grain2 * 0.012;
+    g += grain * 0.02 + grain2 * 0.008;
     g  = clamp(g, 0.0, 1.0);
 
     // Vignette
@@ -79,8 +80,12 @@ const FRAG = /* glsl */ `
     vec3 colorRGB = col.rgb * vg;
     colorRGB = clamp(colorRGB + vec3(grain * 0.012), 0.0, 1.0);
 
-    // Mix B&W and color based on uColorize
-    vec3 finalRGB = mix(vec3(g), colorRGB, uColorize);
+    // Let the red curtain and flowers keep a controlled poetic warmth.
+    float redSignal = smoothstep(0.04, 0.34, col.r - max(col.g, col.b));
+    vec3 warmRGB = mix(vec3(g), colorRGB, redSignal * uWarmth);
+
+    // Mix B&W and color based on uColorize, with a warm retained base.
+    vec3 finalRGB = mix(warmRGB, colorRGB, uColorize);
 
     // Scan reveal: vUv.y=1 is top, vUv.y=0 is bottom
     // Scan line descends as uReveal goes 0→1
@@ -140,12 +145,16 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
   const particleMatRef = useRef<THREE.PointsMaterial | null>(null)
   const planeMeshRef   = useRef<THREE.Mesh | null>(null)
   const ghostMeshRef   = useRef<THREE.Mesh | null>(null)
+  const apertureRef    = useRef<THREE.Group | null>(null)
+  const beamRefs       = useRef<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[]>([])
+  const flashRef       = useRef<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null>(null)
   const uniformsRef    = useRef<{
     uTexture:  { value: THREE.Texture | null }
     uTime:     { value: number }
     uAlpha:    { value: number }
     uColorize: { value: number }
     uReveal:   { value: number }
+    uWarmth:   { value: number }
     uMouse:    { value: THREE.Vector2 }
   } | null>(null)
   const ghostAlphaRef = useRef<{ value: number }>({ value: 0 })
@@ -178,6 +187,7 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
       uAlpha:    { value: 1 },
       uColorize: { value: 1.0 },
       uReveal:   { value: 0.0 },
+      uWarmth:   { value: 0.42 },
       uMouse:    { value: new THREE.Vector2(0.5, 0.5) },
     }
     uniformsRef.current = uniforms
@@ -189,7 +199,7 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
     })
 
     // ── Portrait plane ────────────────────────────────────────────────────
-    const planeGeo = new THREE.PlaneGeometry(2.9, 3.9, 48, 64)
+    const planeGeo = new THREE.PlaneGeometry(3.05, 4.08, 64, 80)
     const planeMat = new THREE.ShaderMaterial({
       uniforms,
       vertexShader:   VERT,
@@ -197,9 +207,27 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
       transparent: true,
     })
     const planeMesh = new THREE.Mesh(planeGeo, planeMat)
-    planeMesh.position.set(1.8, 0.1, -2)
+    planeMesh.position.set(1.9, 0.04, -2)
     scene.add(planeMesh)
     planeMeshRef.current = planeMesh
+
+    const portraitFrameMat = new THREE.MeshBasicMaterial({
+      color: 0xc8af78,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+    const portraitFrame = new THREE.Mesh(new THREE.PlaneGeometry(3.18, 4.21), portraitFrameMat)
+    portraitFrame.position.set(1.9, 0.04, -0.012)
+    scene.add(portraitFrame)
+
+    const frameCutout = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.08, 4.11),
+      new THREE.MeshBasicMaterial({ color: 0x080808, transparent: true, opacity: 0, depthWrite: false })
+    )
+    frameCutout.position.set(1.9, 0.04, -0.006)
+    scene.add(frameCutout)
 
     // ── Studio floor grid ─────────────────────────────────────────────────
     const floorGrid = new THREE.GridHelper(30, 20, 0x1c1c1c, 0x141414)
@@ -227,6 +255,72 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
     const ring3 = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.005, 8, 100), ringMat3)
     ring3.position.set(0.5, 2.5, -5)
     scene.add(ring3)
+
+    // ── Cinematic aperture system ─────────────────────────────────────────
+    const aperture = new THREE.Group()
+    aperture.position.set(1.9, 0.04, -0.18)
+    aperture.scale.setScalar(0.55)
+    apertureRef.current = aperture
+    scene.add(aperture)
+
+    const apertureMat = new THREE.MeshBasicMaterial({
+      color: 0xc8af78,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+    const apertureRing = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.01, 8, 128), apertureMat)
+    aperture.add(apertureRing)
+
+    const bladeMat = new THREE.MeshBasicMaterial({
+      color: 0xc8af78,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+    const bladeGeo = new THREE.PlaneGeometry(1.2, 0.045)
+    for (let i = 0; i < 10; i++) {
+      const blade = new THREE.Mesh(bladeGeo, bladeMat)
+      const angle = (i / 10) * Math.PI * 2
+      blade.position.set(Math.cos(angle) * 1.45, Math.sin(angle) * 1.45, 0)
+      blade.rotation.z = angle + Math.PI / 2
+      aperture.add(blade)
+    }
+
+    // ── Light beams crossing the studio ───────────────────────────────────
+    const beamMat = new THREE.MeshBasicMaterial({
+      color: 0xc8af78,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+    const beamGeo = new THREE.PlaneGeometry(5.2, 0.34)
+    beamRefs.current = []
+    for (let i = 0; i < 4; i++) {
+      const beam = new THREE.Mesh(beamGeo, beamMat.clone())
+      beam.position.set(-1.1 + i * 0.78, 1.1 - i * 0.42, -0.6 - i * 0.24)
+      beam.rotation.z = -0.38
+      beam.rotation.y = -0.22
+      scene.add(beam)
+      beamRefs.current.push(beam)
+    }
+
+    const flashMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+    const flashMesh = new THREE.Mesh(new THREE.PlaneGeometry(14, 9), flashMat)
+    flashMesh.position.set(0, 0, 3.4)
+    scene.add(flashMesh)
+    flashRef.current = flashMesh
 
     // ── Ghost plane ───────────────────────────────────────────────────────
     const ghostAlpha = { value: 0 }
@@ -304,11 +398,11 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
 
     // ── Render loop ───────────────────────────────────────────────────────
     let raf = 0
-    const clock = new THREE.Clock()
+    const startTime = performance.now()
 
     function tick() {
       raf = requestAnimationFrame(tick)
-      const t = clock.getElapsedTime()
+      const t = (performance.now() - startTime) / 1000
 
       camLag.x += (mouse.x * 0.45 - camLag.x) * 0.025
       camLag.y += (mouse.y * 0.22 - camLag.y) * 0.025
@@ -323,6 +417,16 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
       ring3.rotation.x += 0.001
       ring3.rotation.z -= 0.0008
       floorGrid.rotation.y += 0.0003
+
+      if (apertureRef.current) {
+        apertureRef.current.rotation.z += 0.0018
+        apertureRef.current.rotation.y = Math.sin(t * 0.2) * 0.04
+      }
+
+      beamRefs.current.forEach((beam, i) => {
+        beam.position.x += Math.sin(t * 0.42 + i) * 0.0008
+        beam.material.opacity = 0.02 + Math.sin(t * 0.75 + i * 0.8) * 0.01
+      })
 
       planeLag.x += (mouse.x * 0.07 - planeLag.x) * 0.04
       planeLag.y += (mouse.y * 0.05 - planeLag.y) * 0.04
@@ -361,10 +465,31 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
       window.removeEventListener('mousemove', onMove)
       planeGeo.dispose()
       planeMat.dispose()
+      portraitFrame.geometry.dispose()
+      portraitFrameMat.dispose()
+      frameCutout.geometry.dispose()
+      frameCutout.material.dispose()
       ghostGeo.dispose()
       ghostMat.dispose()
       ptGeo.dispose()
       ptMat.dispose()
+      aperture.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry.dispose()
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => mat.dispose())
+          } else {
+            child.material.dispose()
+          }
+        }
+      })
+      beamRefs.current.forEach((beam) => {
+        beam.geometry.dispose()
+        beam.material.dispose()
+      })
+      beamRefs.current = []
+      flashMesh.geometry.dispose()
+      flashMat.dispose()
       ;(ring1.geometry as THREE.BufferGeometry).dispose()
       ringMat1.dispose()
       ;(ring2.geometry as THREE.BufferGeometry).dispose()
@@ -384,21 +509,53 @@ export function HeroCanvas({ ready }: HeroCanvasProps) {
     const ptMat      = particleMatRef.current
     const mesh       = planeMeshRef.current
     const ghost      = ghostMeshRef.current
+    const aperture   = apertureRef.current
+    const beams      = beamRefs.current
+    const flash      = flashRef.current
     const uniforms   = uniformsRef.current
     const ghostAlpha = ghostAlphaRef.current
-    if (!ptMat || !mesh || !ghost || !uniforms) return
+    if (!ptMat || !mesh || !ghost || !aperture || !flash || !uniforms) return
 
     const tl = gsap.timeline({ delay: 0.1 })
+    const portraitFrame = mesh.parent?.children.find(
+      (child): child is THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> =>
+        child instanceof THREE.Mesh &&
+        child.geometry instanceof THREE.PlaneGeometry &&
+        child.material instanceof THREE.MeshBasicMaterial &&
+        child.material.color.getHex() === 0xc8af78 &&
+        child.position.x === 1.9
+    )
 
-    // 1. Particles drift in
-    tl.to(ptMat, { opacity: 0.28, duration: 1.4, ease: 'power2.out' })
+    const apertureMaterials = aperture.children
+      .filter((child): child is THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial> => child instanceof THREE.Mesh)
+      .map((child) => child.material)
 
-    // 2. Scan reveal — portrait develops top→bottom in full color
-    tl.to(uniforms.uReveal, { value: 1.0, duration: 1.8, ease: 'power2.inOut' }, '-=0.8')
-    tl.to(mesh.position, { z: 0, duration: 2.2, ease: 'power3.out' }, '<')
+    // 1. Studio powers on: aperture, light sweep, and particle depth.
+    tl.fromTo(
+      aperture.scale,
+      { x: 0.35, y: 0.35, z: 0.35 },
+      { x: 1, y: 1, z: 1, duration: 1.2, ease: 'power4.out' }
+    )
+    tl.to(aperture.rotation, { z: Math.PI * 1.2, duration: 1.35, ease: 'power4.out' }, '<')
+    tl.to(apertureMaterials, { opacity: 0.22, duration: 0.9, stagger: 0.025, ease: 'power2.out' }, '<')
+    tl.to(beams.map((beam) => beam.material), { opacity: 0.065, duration: 1.1, stagger: 0.08, ease: 'power2.out' }, '<+=0.1')
+    tl.to(ptMat, { opacity: 0.38, size: 0.018, duration: 1.3, ease: 'power2.out' }, '<')
 
-    // 3. Color drains to B&W — cinematic desaturation
-    tl.to(uniforms.uColorize, { value: 0, duration: 2.6, ease: 'power2.inOut' }, '+=0.2')
+    // 2. Camera flash, then the portrait develops top-to-bottom.
+    tl.to(flash.material, { opacity: 0.32, duration: 0.08, ease: 'power1.out' }, '-=0.35')
+    tl.to(flash.material, { opacity: 0, duration: 0.55, ease: 'power2.out' })
+    tl.to(uniforms.uReveal, { value: 1.0, duration: 1.9, ease: 'power3.inOut' }, '-=0.48')
+    tl.to(mesh.position, { z: 0.08, duration: 2.25, ease: 'power4.out' }, '<')
+    tl.fromTo(mesh.rotation, { y: -0.22, x: 0.08 }, { y: 0, x: 0, duration: 2.0, ease: 'power4.out' }, '<')
+    if (portraitFrame) {
+      tl.to(portraitFrame.material, { opacity: 0.18, duration: 1.1, ease: 'power2.out' }, '<+=0.25')
+    }
+
+    // 3. Color drains to B&W while the aperture settles into a halo.
+    tl.to(uniforms.uColorize, { value: 0, duration: 2.6, ease: 'power2.inOut' }, '+=0.05')
+    tl.to(uniforms.uWarmth, { value: 0.58, duration: 2.0, ease: 'sine.inOut' }, '<')
+    tl.to(apertureMaterials, { opacity: 0.08, duration: 1.4, ease: 'power2.inOut' }, '<')
+    tl.to(aperture.scale, { x: 1.18, y: 1.18, z: 1.18, duration: 1.5, ease: 'sine.inOut' }, '<')
 
     // 4. Ghost plane slides in
     tl.to(ghost.position, { z: -0.55, duration: 2.2, ease: 'power3.out' }, '-=2.2')

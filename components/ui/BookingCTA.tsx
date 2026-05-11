@@ -19,7 +19,7 @@ export function BookingCTA() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed bottom-8 right-6 md:right-8 z-[700]"
+          className="fixed inset-x-4 bottom-4 z-[700] sm:inset-x-auto sm:right-6 sm:bottom-8 md:right-8"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
@@ -29,7 +29,7 @@ export function BookingCTA() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center font-sans text-white hover:bg-white hover:text-ink transition-colors duration-350 ease-editorial"
+            className="flex w-full items-center justify-center font-sans text-white transition-colors duration-350 ease-editorial hover:bg-white hover:text-ink sm:w-auto"
             style={{
               fontSize: 10,
               letterSpacing: '0.18em',
@@ -39,6 +39,7 @@ export function BookingCTA() {
               padding: '14px 24px',
               border: '1px solid #2A2A2A',
               whiteSpace: 'nowrap',
+              paddingBottom: 'calc(14px + env(safe-area-inset-bottom))',
             }}
             aria-label="Book a photography session via WhatsApp"
           >

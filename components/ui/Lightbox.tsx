@@ -40,7 +40,7 @@ export function Lightbox() {
         /* ── Backdrop ────────────────────────────────────────────────── */
         <motion.div
           key="lb-backdrop"
-          className="fixed inset-0 z-[300] flex items-center justify-center"
+          className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden px-4"
           style={{ backgroundColor: 'rgba(5,5,5,0.94)', perspective: '1200px' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -48,10 +48,39 @@ export function Lightbox() {
           transition={{ duration: 0.28 }}
           onClick={close}
         >
+          {/* Click transition flash */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute inset-0 bg-white"
+            initial={{ opacity: 0.24 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          />
+
+          {/* Aperture reveal language */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute h-[min(82vw,520px)] w-[min(82vw,520px)] rounded-full border border-[#c8af78]/20"
+            initial={{ opacity: 0, scale: 0.35, rotate: -80 }}
+            animate={{ opacity: [0, 0.75, 0.18], scale: [0.35, 1.12, 1], rotate: 0 }}
+            transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {Array.from({ length: 12 }).map((_, i) => (
+              <motion.span
+                key={i}
+                className="absolute left-1/2 top-1/2 h-px w-[44%] origin-left bg-[#c8af78]/30"
+                style={{ transform: `rotate(${i * 30}deg) translateX(20%)` }}
+                initial={{ opacity: 0, scaleX: 0.2 }}
+                animate={{ opacity: [0, 0.8, 0], scaleX: [0.2, 1, 0.72] }}
+                transition={{ delay: i * 0.015, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              />
+            ))}
+          </motion.div>
+
           {/* ── Counter ──────────────────────────────────────────────── */}
           {multi && (
             <motion.p
-              className="absolute top-6 left-1/2 -translate-x-1/2 font-sans text-white/35 uppercase tracking-[0.22em] text-[10px]"
+              className="absolute left-1/2 top-5 -translate-x-1/2 font-sans text-[10px] uppercase tracking-[0.22em] text-white/35 sm:top-6"
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
@@ -63,7 +92,7 @@ export function Lightbox() {
           {/* ── Close ────────────────────────────────────────────────── */}
           <motion.button
             type="button"
-            className="absolute top-5 right-6 text-white/40 hover:text-white transition-colors z-10"
+            className="absolute right-4 top-4 z-10 min-h-11 min-w-11 text-white/55 transition-colors hover:text-white sm:right-6 sm:top-5"
             onClick={close}
             aria-label="Close lightbox"
             initial={{ opacity: 0 }}
@@ -77,20 +106,20 @@ export function Lightbox() {
           <motion.div
             className="flex flex-col items-center"
             onClick={e => e.stopPropagation()}
-            initial={{ opacity: 0, y: 60,  scale: 0.86, rotateX: 20 }}
-            animate={{ opacity: 1, y: 0,   scale: 1,    rotateX: 0  }}
+            initial={{ opacity: 0, y: 70,  scale: 0.82, rotateX: 24, rotateZ: -1.5 }}
+            animate={{ opacity: 1, y: 0,   scale: 1,    rotateX: 0,  rotateZ: 0 }}
             exit={{    opacity: 0, y: 30,   scale: 0.93, rotateX: -8 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 200, mass: 0.9 }}
+            transition={{ type: 'spring', damping: 24, stiffness: 230, mass: 0.86 }}
             style={{ transformStyle: 'preserve-3d' }}
           >
             {/* ── Inner — slides per index ─────────────────────────── */}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={`lb-${index}`}
-                initial={{ opacity: 0, x: dir * 60 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{    opacity: 0, x: dir * -60 }}
-                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, x: dir * 70, scale: 0.96, filter: 'blur(10px)', clipPath: 'inset(0 50% 0 50%)' }}
+                animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)', clipPath: 'inset(0 0% 0 0%)' }}
+                exit={{ opacity: 0, x: dir * -70, scale: 0.97, filter: 'blur(8px)', clipPath: 'inset(0 50% 0 50%)' }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               >
                 <Image
                   src={image.src}
@@ -129,7 +158,7 @@ export function Lightbox() {
             <>
               <motion.button
                 type="button"
-                className="absolute left-5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/80 transition-colors"
+                className="absolute bottom-5 left-5 min-h-11 min-w-11 text-white/45 transition-colors hover:text-white/80 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:text-white/30"
                 onClick={e => { e.stopPropagation(); handlePrev() }}
                 aria-label="Previous image"
                 whileHover={{ x: -3 }}
@@ -139,7 +168,7 @@ export function Lightbox() {
               </motion.button>
               <motion.button
                 type="button"
-                className="absolute right-5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/80 transition-colors"
+                className="absolute bottom-5 right-5 min-h-11 min-w-11 text-white/45 transition-colors hover:text-white/80 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:text-white/30"
                 onClick={e => { e.stopPropagation(); handleNext() }}
                 aria-label="Next image"
                 whileHover={{ x: 3 }}
@@ -152,7 +181,7 @@ export function Lightbox() {
 
           {/* ── Dot indicators ────────────────────────────────────────── */}
           {multi && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="absolute bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 gap-2 sm:bottom-6">
               {images.map((img, i) => (
                 <button
                   type="button"

@@ -12,6 +12,7 @@ interface ParallaxImageProps {
   className?: string
   priority?: boolean
   sizes?: string
+  objectPosition?: string
 }
 
 export function ParallaxImage({
@@ -21,6 +22,7 @@ export function ParallaxImage({
   className,
   priority = false,
   sizes = '(max-width: 768px) 100vw, 50vw',
+  objectPosition = 'center',
 }: ParallaxImageProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -43,6 +45,7 @@ export function ParallaxImage({
             alt={alt}
             fill
             className="object-cover img-bw"
+            style={{ objectPosition }}
             sizes={sizes}
             priority={priority}
           />

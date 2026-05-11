@@ -17,8 +17,8 @@ import { useLightbox, type LightboxImage } from '@/contexts/LightboxContext'
 import { portfolioItems } from '@/lib/data'
 import type { PortfolioItem } from '@/types'
 
-type Category = 'All' | 'Convocation' | 'Portrait' | 'Event'
-const CATEGORIES: Category[] = ['All', 'Convocation', 'Portrait', 'Event']
+type Category = 'All' | 'Convocation' | 'Portrait' | 'Family' | 'Event'
+const CATEGORIES: Category[] = ['All', 'Convocation', 'Portrait', 'Family', 'Event']
 
 const lightboxImages: LightboxImage[] = portfolioItems.map(item => ({
   src: item.image,
@@ -62,18 +62,40 @@ function PortfolioCard({
     <button
       type="button"
       ref={ref as never}
-      className="portfolio-card relative flex-shrink-0 overflow-hidden group cursor-pointer"
+      className="portfolio-card group relative flex-shrink-0 cursor-pointer overflow-visible"
       onClick={onOpen}
       aria-label={`View ${item.title}`}
       style={{
-        width: 'min(62vw, 680px)',
-        height: 'min(82vh, 740px)',
-        marginRight: 16,
+        width: 'min(58vw, 620px)',
+        height: 'min(76vh, 700px)',
+        marginRight: 42,
+        transformStyle: 'preserve-3d',
+        willChange: 'transform, opacity, filter',
       }}
     >
+      <div
+        aria-hidden="true"
+        className="portfolio-card-shadow absolute inset-0 translate-y-8 bg-black/25 blur-2xl transition-opacity duration-500 group-hover:opacity-80"
+        style={{ transform: 'translateZ(-70px) translateY(34px) scale(0.9)', opacity: 0.45 }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute -inset-4 border border-[#c8af78]/15 opacity-0 transition-all duration-500 group-hover:-inset-6 group-hover:opacity-100"
+        style={{ transform: 'translateZ(28px)' }}
+      />
+
+      <div
+        className="portfolio-card-inner absolute inset-0 overflow-hidden bg-black"
+        style={{
+          transformStyle: 'preserve-3d',
+          boxShadow: '0 28px 80px rgba(0,0,0,0.28)',
+        }}
+      >
       {/* Image with clip-path + scale reveal */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 portfolio-card-image"
+        style={{ transform: 'translateZ(1px)' }}
         initial={{ clipPath: 'inset(100% 0 0 0)' }}
         animate={isInView ? { clipPath: 'inset(0% 0 0 0)' } : {}}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
@@ -95,10 +117,31 @@ function PortfolioCard({
         </motion.div>
       </motion.div>
 
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            'linear-gradient(112deg, transparent 0%, transparent 36%, rgba(255,255,255,0.26) 47%, transparent 58%, transparent 100%)',
+          transform: 'translateZ(18px)',
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute left-4 top-4 h-8 w-8 border-l border-t border-[#c8af78]/55"
+        style={{ transform: 'translateZ(32px)' }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute bottom-4 right-4 h-8 w-8 border-b border-r border-[#c8af78]/55"
+        style={{ transform: 'translateZ(32px)' }}
+      />
+
       {/* Top: category + frame counter */}
       <div
         className="absolute top-0 left-0 right-0 flex items-start justify-between p-5 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, transparent 100%)', transform: 'translateZ(42px)' }}
       >
         <span
           className="font-sans uppercase tracking-[0.22em] text-white/60"
@@ -117,7 +160,7 @@ function PortfolioCard({
       {/* Bottom caption */}
       <div
         className="absolute inset-0 flex flex-col justify-end p-6 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 55%)' }}
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 58%)', transform: 'translateZ(44px)' }}
       >
         <div className="flex items-end justify-between">
           <div>
@@ -140,6 +183,7 @@ function PortfolioCard({
             className="text-white/40 mb-0.5 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300"
           />
         </div>
+      </div>
       </div>
     </button>
   )
@@ -191,9 +235,18 @@ export function Portfolio() {
               cards.forEach((card) => {
                 const rect = card.getBoundingClientRect()
                 const cardCenter = rect.left + rect.width / 2
-                const offset = (cardCenter - vw * 0.5) / (vw * 0.65)
-                const ry = gsap.utils.clamp(-18, 18, offset * 22)
-                card.style.transform = `perspective(1100px) rotateY(${ry}deg)`
+                const offset = (cardCenter - vw * 0.5) / (vw * 0.52)
+                const depth = gsap.utils.clamp(0, 1, 1 - Math.abs(offset))
+                const ry = gsap.utils.clamp(-34, 34, offset * 34)
+                const rx = gsap.utils.clamp(-7, 7, -Math.abs(offset) * 7 + depth * 2)
+                const z = -120 + depth * 240
+                const scale = 0.82 + depth * 0.2
+                const opacity = 0.42 + depth * 0.58
+                const blur = (1 - depth) * 2.5
+                card.style.zIndex = String(Math.round(depth * 100))
+                card.style.opacity = String(opacity)
+                card.style.filter = `blur(${blur}px) saturate(${0.78 + depth * 0.22})`
+                card.style.transform = `perspective(1400px) translateZ(${z}px) rotateY(${ry}deg) rotateX(${rx}deg) scale(${scale})`
               })
             },
           },
@@ -208,12 +261,28 @@ export function Portfolio() {
   return (
     <section
       ref={sectionRef}
-      // eslint-disable-next-line react/no-static-id -- navigation anchor, must be a predictable hash target
       id="stories"
       className="relative overflow-hidden"
       style={{ backgroundColor: '#FAF9F6' }}
       aria-labelledby="portfolio-heading"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(circle at 72% 36%, rgba(200,175,120,0.14), transparent 22%), radial-gradient(circle at 22% 70%, rgba(17,17,17,0.08), transparent 24%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 right-0 top-[52%] hidden h-px bg-gradient-to-r from-transparent via-[#c8af78]/35 to-transparent lg:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-32 top-24 hidden h-[520px] w-[520px] rounded-full border border-[#c8af78]/15 lg:block"
+      />
+
       {/* Section number watermark */}
       <div
         aria-hidden="true"
@@ -245,7 +314,6 @@ export function Portfolio() {
             </Reveal>
             <GoldAccent />
             <AnimatedHeading
-              // eslint-disable-next-line react/no-static-id -- aria-labelledby reference, must be predictable
               id="portfolio-heading"
               as="h2"
               className="font-serif text-ink text-section"
@@ -320,8 +388,8 @@ export function Portfolio() {
       {/* Desktop: GSAP horizontal scroll track */}
       <div
         ref={trackRef}
-        className="hidden lg:flex px-6 pb-16"
-        style={{ gap: 0 }}
+        className="hidden lg:flex px-6 pb-20 pt-8"
+        style={{ gap: 0, perspective: '1400px', transformStyle: 'preserve-3d' }}
       >
         {portfolioItems.map((item, i) => (
           <PortfolioCard
@@ -338,7 +406,7 @@ export function Portfolio() {
       {/* Mobile: 2-column grid with AutoAnimate */}
       <div
         ref={gridRef}
-        className="lg:hidden grid grid-cols-2 gap-3 px-6 md:px-8 pb-16"
+        className="grid grid-cols-1 gap-3 px-6 pb-16 min-[430px]:grid-cols-2 md:px-8 lg:hidden"
       >
         {filtered.map((item, i) => (
           <ImageCard

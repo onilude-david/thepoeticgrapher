@@ -8,6 +8,7 @@ import { SectionLabel } from '@/components/ui/SectionLabel'
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { journeySteps } from '@/lib/data'
+import { Bg3D } from '@/components/ui/Bg3D'
 
 export function Journey() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -40,28 +41,39 @@ export function Journey() {
     <section
       ref={sectionRef}
       id="journey"
-      className="section-pad"
+      className="section-pad relative"
       style={{ backgroundColor: '#FFFFFF' }}
       aria-labelledby="journey-heading"
     >
+      <Bg3D variant="light" />
       <div className="max-w-container mx-auto px-6 md:px-8">
         {/* Header */}
-        <div className="mb-16 md:mb-20">
-          <Reveal>
-            <SectionLabel text="The Journey" className="mb-6" />
+        <div className="mb-16 grid gap-8 md:mb-20 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <Reveal>
+              <SectionLabel text="The Journey" className="mb-6" />
+            </Reveal>
+            <AnimatedHeading
+              id="journey-heading"
+              as="h2"
+              className="font-serif text-ink"
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+                lineHeight: 1.04,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Four Steps to Your Story.
+            </AnimatedHeading>
+          </div>
+          <Reveal delay={0.12}>
+            <p
+              className="max-w-[300px] font-sans text-muted"
+              style={{ fontSize: 15, lineHeight: 1.75 }}
+            >
+              A calm path from first message to final gallery, built so you always know what comes next.
+            </p>
           </Reveal>
-          <AnimatedHeading
-            id="journey-heading"
-            as="h2"
-            className="font-serif text-ink"
-            style={{
-              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-              lineHeight: 1.04,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Four Steps to Your Story.
-          </AnimatedHeading>
         </div>
 
         {/* Desktop: horizontal timeline */}
@@ -81,10 +93,10 @@ export function Journey() {
             {/* Step dots — GSAP 3D flip-in via .journey-step */}
             <div className="journey-steps grid grid-cols-4">
               {journeySteps.map((step, i) => (
-                <div key={step.number} className="journey-step flex flex-col items-start">
+                <div key={step.number} className="journey-step group flex flex-col items-start pr-6">
                   {/* Circle */}
                   <div
-                    className="w-10 h-10 rounded-full border border-charcoal flex items-center justify-center mb-6 bg-white z-10 relative"
+                    className="relative z-10 mb-6 flex h-10 w-10 items-center justify-center rounded-full border border-charcoal bg-white transition-colors duration-300 group-hover:border-[#c8af78] group-hover:bg-[#FAF9F6]"
                   >
                     <span
                       className="font-serif text-ink"
@@ -102,14 +114,14 @@ export function Journey() {
                   </span>
 
                   <h3
-                    className="font-serif text-ink mb-3 pr-8"
+                    className="mb-3 font-serif text-ink"
                     style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}
                   >
                     {step.title}
                   </h3>
 
                   <p
-                    className="font-sans text-muted pr-8"
+                    className="font-sans text-muted"
                     style={{ fontSize: 15, lineHeight: 1.7 }}
                   >
                     {step.description}
@@ -129,12 +141,12 @@ export function Journey() {
               aria-hidden="true"
             />
 
-            <div className="space-y-10">
+            <div className="space-y-5">
               {journeySteps.map((step, i) => (
-                <Reveal key={step.number} delay={i * 0.08} className="relative pl-14">
+                <Reveal key={step.number} delay={i * 0.08} className="relative border border-border bg-white/60 p-5 pl-16">
                   {/* Circle */}
                   <div
-                    className="absolute left-0 top-0 w-10 h-10 rounded-full border border-charcoal flex items-center justify-center bg-white z-10"
+                    className="absolute left-4 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-charcoal bg-white"
                   >
                     <span
                       className="font-serif text-ink"

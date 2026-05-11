@@ -11,7 +11,7 @@ import { WhyTPG } from '@/components/sections/WhyTPG'
 export default function HomePage() {
   return (
     <>
-      <Hero ready />
+      <Hero />
       <WhatWeDo />
       <Services />
       <WhyTPG />
