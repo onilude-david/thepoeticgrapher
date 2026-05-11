@@ -1,8 +1,7 @@
 'use client'
 
 import { ReactLenis, useLenis } from 'lenis/react'
-import { gsap } from '@/lib/gsap'
-import { ScrollTrigger } from '@/lib/gsap'
+import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { useEffect } from 'react'
 
 function GSAPLenisBridge() {

@@ -63,24 +63,24 @@ export function WhatWeDo() {
           {/* Right: 2x2 image grid */}
           <div className="grid grid-cols-2 gap-3">
             <ImageCard
-              src="https://picsum.photos/seed/conv_tpg/500/600"
+              src="/images/Graduation%20Portrait/_Q7A9135-.jpg"
               alt="Convocation portrait — a graduate in academic regalia, framed with quiet pride"
               aspectRatio="4/5"
             />
             <ImageCard
-              src="https://picsum.photos/seed/port_tpg/500/600"
+              src="/images/Portraits/IMG_9787-2.jpeg"
               alt="Personal portrait session — soft natural light on a subject at ease"
               aspectRatio="4/5"
               className="mt-6"
             />
             <ImageCard
-              src="https://picsum.photos/seed/fam_tpg/500/600"
-              alt="Family portrait — parents and children together, warmth in every detail"
+              src="/images/Portraits/IMG_9793-2.jpeg"
+              alt="Portrait session — an honest, unhurried moment between subject and light"
               aspectRatio="4/5"
               className="-mt-6"
             />
             <ImageCard
-              src="https://picsum.photos/seed/evt_tpg/500/600"
+              src="/images/events/IMG_0368.jpeg"
               alt="Event documentation — guests gathered in celebration, a moment preserved"
               aspectRatio="4/5"
             />

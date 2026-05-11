@@ -46,29 +46,29 @@ export const portfolioItems: PortfolioItem[] = [
   {
     id: 'convocation-01',
     title: 'The Ceremony',
-    caption: 'Convocation · University of Lagos',
-    image: 'https://picsum.photos/seed/conv1/800/1100',
+    caption: 'Convocation Portrait',
+    image: '/images/Graduation%20Portrait/_Q7A9135-.jpg',
     category: 'Convocation',
   },
   {
     id: 'portrait-01',
     title: 'Solitude',
     caption: 'Personal Session · Lagos',
-    image: 'https://picsum.photos/seed/port1/800/1100',
+    image: '/images/Portraits/IMG_9785-2.jpeg',
     category: 'Portrait',
   },
   {
-    id: 'family-01',
-    title: 'Sunday Light',
-    caption: 'Family Session · Lekki',
-    image: 'https://picsum.photos/seed/fam1/800/1100',
-    category: 'Family',
+    id: 'portrait-02',
+    title: 'Still',
+    caption: 'Portrait Session · Lagos',
+    image: '/images/Portraits/IMG_9790-2.jpeg',
+    category: 'Portrait',
   },
   {
     id: 'event-01',
     title: 'The Gathering',
-    caption: 'Event · Victoria Island',
-    image: 'https://picsum.photos/seed/evt1/800/1100',
+    caption: 'Event Documentation',
+    image: '/images/events/IMG_0422.jpeg',
     category: 'Event',
   },
 ]
@@ -133,7 +133,7 @@ export const testimonial: TestimonialItem = {
     'ThePoeticGrapher didn\'t just take pictures. He captured the feeling behind the moment. Every frame felt intentional, emotional, and timeless.',
   client: 'Adaeze O.',
   session: 'Convocation Portrait',
-  image: 'https://picsum.photos/seed/test1/600/800',
+  image: '/images/Portraits/IMG_9903.jpeg',
 }
 
 // Contact details

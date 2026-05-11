@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
+import { useLenis } from 'lenis/react'
 import { X, Instagram, MessageCircle } from 'lucide-react'
 import { INSTAGRAM_URL, WHATSAPP_URL } from '@/lib/data'
 
@@ -18,6 +19,8 @@ interface MobileMenuProps {
 
 export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
   const closeRef = useRef<HTMLButtonElement>(null)
+  const lenis = useLenis()
+  const shouldReduce = useReducedMotion()
 
   // Focus trap and ESC key
   useEffect(() => {
@@ -33,11 +36,20 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
 
-  // Prevent body scroll when open
+  // Lenis-aware scroll lock
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [open])
+    if (open) {
+      lenis?.stop()
+    } else {
+      lenis?.start()
+    }
+    return () => lenis?.start()
+  }, [open, lenis])
+
+  const slideInitial = shouldReduce ? { opacity: 0 } : { x: '100%' }
+  const slideAnimate = shouldReduce ? { opacity: 1 } : { x: 0 }
+  const slideExit = shouldReduce ? { opacity: 0 } : { x: '100%' }
+  const slideDuration = shouldReduce ? 0.15 : 0.5
 
   return (
     <AnimatePresence>
@@ -48,15 +60,16 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
           aria-label="Navigation menu"
           className="fixed inset-0 z-[900] flex flex-col"
           style={{ backgroundColor: '#080808' }}
-          initial={{ x: '100%' }}
-          animate={{ x: 0 }}
-          exit={{ x: '100%' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          initial={slideInitial}
+          animate={slideAnimate}
+          exit={slideExit}
+          transition={{ duration: slideDuration, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Close button */}
           <div className="flex justify-end px-6 py-5">
             <button
               ref={closeRef}
+              type="button"
               onClick={onClose}
               className="text-white p-2 -mr-2"
               aria-label="Close navigation menu"
@@ -71,12 +84,12 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
               {links.map((link, i) => (
                 <motion.li
                   key={link.href}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: shouldReduce ? 0 : 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.5,
+                    duration: shouldReduce ? 0.15 : 0.5,
                     ease: [0.22, 1, 0.36, 1],
-                    delay: 0.1 + i * 0.05,
+                    delay: shouldReduce ? 0 : 0.1 + i * 0.05,
                   }}
                 >
                   <a
@@ -96,7 +109,7 @@ export function MobileMenu({ open, onClose, links }: MobileMenuProps) {
               className="flex gap-5 mt-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.45, duration: 0.5 }}
+              transition={{ delay: shouldReduce ? 0 : 0.45, duration: shouldReduce ? 0.15 : 0.5 }}
             >
               <a
                 href={INSTAGRAM_URL}

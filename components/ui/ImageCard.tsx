@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import Image from 'next/image'
-import { motion, useInView } from 'motion/react'
+import { motion, useInView, useReducedMotion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -29,6 +29,7 @@ export function ImageCard({
 }: ImageCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const shouldReduce = useReducedMotion()
 
   return (
     <div ref={ref} className={cn('relative overflow-hidden group', className)}>
@@ -36,14 +37,14 @@ export function ImageCard({
       <motion.div
         className="w-full overflow-hidden"
         style={{ aspectRatio }}
-        initial={{ clipPath: 'inset(100% 0 0 0)' }}
-        animate={isInView ? { clipPath: 'inset(0% 0 0 0)' } : {}}
+        initial={shouldReduce ? {} : { clipPath: 'inset(100% 0 0 0)' }}
+        animate={shouldReduce ? {} : isInView ? { clipPath: 'inset(0% 0 0 0)' } : {}}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
-          className="w-full h-full"
-          initial={{ scale: 1.12 }}
-          animate={isInView ? { scale: 1 } : {}}
+          className="relative w-full h-full"
+          initial={shouldReduce ? {} : { scale: 1.12 }}
+          animate={shouldReduce ? {} : isInView ? { scale: 1 } : {}}
           transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
         >
           <Image

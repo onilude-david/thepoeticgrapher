@@ -1,12 +1,4 @@
 import type { Variants } from 'motion/react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
-
-export { gsap, ScrollTrigger }
 
 export const ease = [0.22, 1, 0.36, 1] as const
 

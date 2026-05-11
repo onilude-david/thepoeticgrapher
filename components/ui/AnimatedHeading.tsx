@@ -73,7 +73,7 @@ export function AnimatedHeading({
   return (
     <Tag
       ref={ref}
-      className={cn('opacity-0', className)}
+      className={cn(className)}
       style={{ opacity: 0, ...style }}
       {...rest}
     >

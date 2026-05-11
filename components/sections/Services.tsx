@@ -5,10 +5,12 @@ import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
 import { staggerContainer, cardReveal } from '@/lib/animations'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { WHATSAPP_URL, services } from '@/lib/data'
 
 export function Services() {
+  const shouldReduce = useReducedMotion()
+
   return (
     <section
       id="services"
@@ -46,7 +48,7 @@ export function Services() {
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border"
           variants={staggerContainer(0.08, 0.1)}
-          initial="hidden"
+          initial={shouldReduce ? 'visible' : 'hidden'}
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
@@ -57,9 +59,9 @@ export function Services() {
               className="bg-surface p-8 flex flex-col group cursor-default"
               style={{
                 border: '1px solid var(--border)',
-                transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s, box-shadow 0.35s',
+                transition: 'border-color 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s',
               }}
-              whileHover={{
+              whileHover={shouldReduce ? undefined : {
                 y: -4,
                 transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
               }}

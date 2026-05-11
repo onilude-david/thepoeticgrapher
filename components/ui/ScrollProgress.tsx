@@ -16,7 +16,7 @@ export function ScrollProgress() {
       className="fixed top-0 left-0 right-0 z-[850] origin-left"
       aria-hidden="true"
     >
-      <div className="h-[1px] w-full bg-white/60" />
+      <div className="h-[1px] w-full bg-ink/40" />
     </motion.div>
   )
 }

@@ -27,7 +27,7 @@ export function Header({ ready }: { ready: boolean }) {
   return (
     <>
       <motion.header
-        className="fixed top-0 left-0 right-0 z-[800] transition-all duration-400"
+        className="fixed top-0 left-0 right-0 z-[800] transition-all duration-300"
         initial={{ opacity: 0, y: -10 }}
         animate={ready ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -74,6 +74,7 @@ export function Header({ ready }: { ready: boolean }) {
 
           {/* Mobile hamburger */}
           <button
+            type="button"
             className="md:hidden text-white p-2 -mr-2"
             onClick={() => setMenuOpen(true)}
             aria-label="Open navigation menu"

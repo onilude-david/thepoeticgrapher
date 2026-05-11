@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useInView } from 'motion/react'
+import { motion, useInView, useReducedMotion } from 'motion/react'
 import { fadeUp } from '@/lib/animations'
 import type { Variants } from 'motion/react'
 import { cn } from '@/lib/utils'
@@ -25,12 +25,13 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once, amount: threshold })
+  const shouldReduce = useReducedMotion()
 
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={shouldReduce ? 'visible' : 'hidden'}
+      animate={shouldReduce ? 'visible' : isInView ? 'visible' : 'hidden'}
       variants={variants}
       transition={delay ? { delay } : undefined}
       className={cn(className)}

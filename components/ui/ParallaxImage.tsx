@@ -1,8 +1,8 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
 import Image from 'next/image'
+import { motion, useScroll, useTransform } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 interface ParallaxImageProps {
@@ -29,30 +29,24 @@ export function ParallaxImage({
     offset: ['start end', 'end start'],
   })
 
-  // Image moves at `speed` fraction of the scroll delta
-  const isMobile =
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
-
-  const yRange = isMobile ? [0, 0] : [`${speed * 100}px`, `-${speed * 100}px`]
-  const y = useTransform(scrollYProgress, [0, 1], yRange)
+  // Always string px values so useTransform resolves to string[] overload
+  const offset = `${speed * 100}px`
+  const y = useTransform(scrollYProgress, [0, 1], [offset, `-${offset}`])
 
   return (
-    <div
-      ref={ref}
-      className={cn('relative overflow-hidden', className)}
-    >
-      <motion.div
-        style={{ y }}
-        className="absolute inset-[-15%] w-full"
-      >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover img-bw"
-          sizes={sizes}
-          priority={priority}
-        />
+    <div ref={ref} className={cn('relative overflow-hidden', className)}>
+      <motion.div style={{ y }} className="absolute inset-0 w-full">
+        {/* Extend 15% beyond container on all sides so parallax never reveals edges */}
+        <div className="absolute -inset-[15%] w-[130%] h-[130%]">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover img-bw"
+            sizes={sizes}
+            priority={priority}
+          />
+        </div>
       </motion.div>
     </div>
   )
