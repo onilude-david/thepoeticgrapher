@@ -1,3 +1,8 @@
+'use client'
+
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from '@/lib/gsap'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Reveal } from '@/components/ui/Reveal'
@@ -18,8 +23,32 @@ const benefits = [
 ]
 
 export function WhyTPG() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+      gsap.from('.why-benefit', {
+        rotateX: -30,
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: 'power3.out',
+        transformPerspective: 700,
+        scrollTrigger: {
+          trigger: '.why-benefits',
+          start: 'top 80%',
+        },
+      })
+    },
+    { scope: sectionRef }
+  )
+
   return (
     <section
+      ref={sectionRef}
       id="why"
       className="section-pad"
       style={{ backgroundColor: '#F3F1EC' }}
@@ -72,11 +101,11 @@ export function WhyTPG() {
             </div>
           </div>
 
-          {/* Col 2 & 3: benefits */}
+          {/* Col 2 & 3: benefits — GSAP 3D fold-in via .why-benefit */}
           <div className="md:col-span-2 md:pl-12">
-            <div className="divide-y divide-warm-line">
-              {benefits.map((benefit, i) => (
-                <Reveal key={benefit.title} delay={i * 0.1} className="py-8 first:pt-0 md:first:pt-0 last:pb-0">
+            <div className="why-benefits divide-y divide-warm-line">
+              {benefits.map((benefit) => (
+                <div key={benefit.title} className="why-benefit py-8 first:pt-0 md:first:pt-0 last:pb-0">
                   <h3
                     className="font-serif text-ink mb-3"
                     style={{ fontSize: 20, fontWeight: 400, lineHeight: 1.2 }}
@@ -89,7 +118,7 @@ export function WhyTPG() {
                   >
                     {benefit.body}
                   </p>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>

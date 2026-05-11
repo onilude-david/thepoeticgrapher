@@ -1,8 +1,11 @@
+'use client'
+
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { ImageCard } from '@/components/ui/ImageCard'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
+import { Tilt3D } from '@/components/ui/Tilt3D'
 import { WHATSAPP_URL } from '@/lib/data'
 
 export function WhatWeDo() {
@@ -60,30 +63,36 @@ export function WhatWeDo() {
             </Reveal>
           </div>
 
-          {/* Right: 2x2 image grid */}
+          {/* Right: 2x2 image grid with 3D tilt */}
           <div className="grid grid-cols-2 gap-3">
-            <ImageCard
-              src="/images/Graduation%20Portrait/_Q7A9135-.jpg"
-              alt="Convocation portrait — a graduate in academic regalia, framed with quiet pride"
-              aspectRatio="4/5"
-            />
-            <ImageCard
-              src="/images/Portraits/IMG_9787-2.jpeg"
-              alt="Personal portrait session — soft natural light on a subject at ease"
-              aspectRatio="4/5"
-              className="mt-6"
-            />
-            <ImageCard
-              src="/images/Portraits/IMG_9793-2.jpeg"
-              alt="Portrait session — an honest, unhurried moment between subject and light"
-              aspectRatio="4/5"
-              className="-mt-6"
-            />
-            <ImageCard
-              src="/images/events/IMG_0368.jpeg"
-              alt="Event documentation — guests gathered in celebration, a moment preserved"
-              aspectRatio="4/5"
-            />
+            <Tilt3D intensity={7}>
+              <ImageCard
+                src="/images/Graduation%20Portrait/_Q7A9135-.jpg"
+                alt="Convocation portrait — a graduate in academic regalia, framed with quiet pride"
+                aspectRatio="4/5"
+              />
+            </Tilt3D>
+            <Tilt3D intensity={7} className="mt-6">
+              <ImageCard
+                src="/images/Portraits/IMG_9787-2.jpeg"
+                alt="Personal portrait session — soft natural light on a subject at ease"
+                aspectRatio="4/5"
+              />
+            </Tilt3D>
+            <Tilt3D intensity={7} className="-mt-6">
+              <ImageCard
+                src="/images/Portraits/IMG_9793-2.jpeg"
+                alt="Portrait session — an honest, unhurried moment between subject and light"
+                aspectRatio="4/5"
+              />
+            </Tilt3D>
+            <Tilt3D intensity={7}>
+              <ImageCard
+                src="/images/events/IMG_0368.jpeg"
+                alt="Event documentation — guests gathered in celebration, a moment preserved"
+                aspectRatio="4/5"
+              />
+            </Tilt3D>
           </div>
         </div>
       </div>

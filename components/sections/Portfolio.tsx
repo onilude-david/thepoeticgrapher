@@ -97,6 +97,17 @@ export function Portfolio() {
             scrub: 1,
             end: () => `+=${track.scrollWidth - window.innerWidth}`,
             invalidateOnRefresh: true,
+            onUpdate: () => {
+              const cards = track.querySelectorAll<HTMLElement>('.portfolio-card')
+              const vw = window.innerWidth
+              cards.forEach((card) => {
+                const rect = card.getBoundingClientRect()
+                const cardCenter = rect.left + rect.width / 2
+                const offset = (cardCenter - vw * 0.5) / (vw * 0.65)
+                const ry = gsap.utils.clamp(-18, 18, offset * 22)
+                card.style.transform = `perspective(1100px) rotateY(${ry}deg)`
+              })
+            },
           },
         })
       })

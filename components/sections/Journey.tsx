@@ -2,17 +2,43 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'motion/react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from '@/lib/gsap'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { journeySteps } from '@/lib/data'
 
 export function Journey() {
+  const sectionRef = useRef<HTMLElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
   const isLineInView = useInView(lineRef, { once: true, amount: 0.4 })
 
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+      gsap.from('.journey-step', {
+        rotateX: 40,
+        y: 60,
+        opacity: 0,
+        duration: 1.0,
+        stagger: 0.12,
+        ease: 'power3.out',
+        transformPerspective: 800,
+        transformOrigin: 'top center',
+        scrollTrigger: {
+          trigger: '.journey-steps',
+          start: 'top 78%',
+        },
+      })
+    },
+    { scope: sectionRef }
+  )
+
   return (
     <section
+      ref={sectionRef}
       id="journey"
       className="section-pad"
       style={{ backgroundColor: '#FFFFFF' }}
@@ -52,45 +78,43 @@ export function Journey() {
               aria-hidden="true"
             />
 
-            {/* Step dots */}
-            <div className="grid grid-cols-4">
+            {/* Step dots — GSAP 3D flip-in via .journey-step */}
+            <div className="journey-steps grid grid-cols-4">
               {journeySteps.map((step, i) => (
-                <Reveal key={step.number} delay={i * 0.08}>
-                  <div className="flex flex-col items-start">
-                    {/* Circle */}
-                    <div
-                      className="w-10 h-10 rounded-full border border-charcoal flex items-center justify-center mb-6 bg-white z-10 relative"
-                    >
-                      <span
-                        className="font-serif text-ink"
-                        style={{ fontSize: 16, fontWeight: 400 }}
-                      >
-                        {i + 1}
-                      </span>
-                    </div>
-
+                <div key={step.number} className="journey-step flex flex-col items-start">
+                  {/* Circle */}
+                  <div
+                    className="w-10 h-10 rounded-full border border-charcoal flex items-center justify-center mb-6 bg-white z-10 relative"
+                  >
                     <span
-                      className="font-sans text-muted/60 uppercase mb-3 block"
-                      style={{ fontSize: 10, letterSpacing: '0.2em' }}
+                      className="font-serif text-ink"
+                      style={{ fontSize: 16, fontWeight: 400 }}
                     >
-                      {step.number}
+                      {i + 1}
                     </span>
-
-                    <h3
-                      className="font-serif text-ink mb-3 pr-8"
-                      style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}
-                    >
-                      {step.title}
-                    </h3>
-
-                    <p
-                      className="font-sans text-muted pr-8"
-                      style={{ fontSize: 15, lineHeight: 1.7 }}
-                    >
-                      {step.description}
-                    </p>
                   </div>
-                </Reveal>
+
+                  <span
+                    className="font-sans text-muted/60 uppercase mb-3 block"
+                    style={{ fontSize: 10, letterSpacing: '0.2em' }}
+                  >
+                    {step.number}
+                  </span>
+
+                  <h3
+                    className="font-serif text-ink mb-3 pr-8"
+                    style={{ fontSize: 22, fontWeight: 400, lineHeight: 1.2 }}
+                  >
+                    {step.title}
+                  </h3>
+
+                  <p
+                    className="font-sans text-muted pr-8"
+                    style={{ fontSize: 15, lineHeight: 1.7 }}
+                  >
+                    {step.description}
+                  </p>
+                </div>
               ))}
             </div>
           </div>

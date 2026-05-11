@@ -1,6 +1,9 @@
+'use client'
+
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { ImageCard } from '@/components/ui/ImageCard'
 import { Reveal } from '@/components/ui/Reveal'
+import { Tilt3D } from '@/components/ui/Tilt3D'
 import { testimonial } from '@/lib/data'
 
 export function Testimonial() {
@@ -12,15 +15,16 @@ export function Testimonial() {
     >
       <div className="max-w-container mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Left: image */}
+          {/* Left: image with 3D tilt */}
           <Reveal className="order-2 md:order-1">
             {testimonial.image && (
-              <ImageCard
-                src={testimonial.image}
-                alt="Portrait of a happy ThePoeticGrapher Studios client"
-                aspectRatio="3/4"
-                className="max-w-sm mx-auto md:mx-0"
-              />
+              <Tilt3D intensity={8} className="max-w-sm mx-auto md:mx-0">
+                <ImageCard
+                  src={testimonial.image}
+                  alt="Portrait of a happy ThePoeticGrapher Studios client"
+                  aspectRatio="3/4"
+                />
+              </Tilt3D>
             )}
           </Reveal>
 
