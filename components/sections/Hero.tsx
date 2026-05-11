@@ -31,7 +31,7 @@ export function Hero() {
     <section
       id="top"
       data-theme="dark"
-      className="relative full-height w-full overflow-hidden"
+      className="mobile-hero relative full-height w-full overflow-hidden"
       style={{ backgroundColor: '#080808' }}
       aria-label="Hero — ThePoeticGrapher Studios"
     >
@@ -95,7 +95,7 @@ export function Hero() {
       <div className="relative z-10 flex flex-col min-h-[100dvh]">
 
         {/* Padded zone: label + headline + CTAs */}
-        <div className="flex flex-1 flex-col px-6 pb-8 pt-28 md:pb-0 md:pl-16 md:pr-8 md:pt-0">
+        <div className="flex flex-1 flex-col px-6 pb-7 pt-24 md:pb-0 md:pl-16 md:pr-8 md:pt-0">
 
           {/* Label — top */}
           <motion.div
@@ -115,7 +115,7 @@ export function Hero() {
 
             {/* Main headline */}
             <h1
-              className="font-serif text-white mb-7"
+              className="mobile-hero-title font-serif text-white mb-6 md:mb-7"
               aria-label="Framing Poetry, One Moment at a Time."
             >
               {/* Line 1: FILLED — "Framing Poetry," */}
@@ -170,7 +170,7 @@ export function Hero() {
 
             {/* Body + stat row */}
             <motion.div
-              className="mb-8 flex items-end gap-8"
+              className="mobile-hero-copy mb-7 flex items-end gap-8 md:mb-8"
               initial={{ opacity: 0, y: 18 }}
               animate={ready ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: d + 1.2, duration: 0.8, ease }}
@@ -198,7 +198,7 @@ export function Hero() {
 
             {/* CTAs */}
             <motion.div
-              className="flex flex-col gap-3 sm:flex-row"
+              className="mobile-hero-actions flex flex-col gap-3 sm:flex-row"
               initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }}
               animate={ready ? { opacity: 1, clipPath: 'inset(0% 0 0 0)' } : {}}
               transition={{ delay: d + 1.5, duration: 0.8, ease }}
@@ -281,16 +281,23 @@ export function Hero() {
           priority
           className="absolute inset-0"
           sizes="130vw"
-          objectPosition="58% 42%"
+          objectPosition="55% 36%"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.76)' }} />
+        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,8,8,0.50)' }} />
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(8,8,8,0.68) 0%, rgba(8,8,8,0.32) 42%, rgba(8,8,8,0.88) 100%), linear-gradient(to right, rgba(8,8,8,0.78) 0%, transparent 70%)',
+              'linear-gradient(to bottom, rgba(8,8,8,0.84) 0%, rgba(8,8,8,0.30) 38%, rgba(8,8,8,0.92) 100%), linear-gradient(to right, rgba(8,8,8,0.72) 0%, rgba(8,8,8,0.28) 58%, transparent 100%)',
           }}
         />
+        <div className="mobile-hero-cinema absolute inset-0">
+          <span className="mobile-hero-aperture" />
+          <span className="mobile-hero-focus mobile-hero-focus-top" />
+          <span className="mobile-hero-focus mobile-hero-focus-bottom" />
+          <span className="mobile-hero-sweep" />
+          <span className="mobile-hero-flare" />
+        </div>
       </div>
 
     </section>
