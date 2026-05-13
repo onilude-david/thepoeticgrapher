@@ -2,6 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { FAQ } from '@/components/sections/FAQ'
 import { Hero } from '@/components/sections/Hero'
 import { Journey } from '@/components/sections/Journey'
+import { Packages } from '@/components/sections/Packages'
 import { Portfolio } from '@/components/sections/Portfolio'
 import { Services } from '@/components/sections/Services'
 import { Testimonial } from '@/components/sections/Testimonial'
@@ -14,6 +15,7 @@ export default function HomePage() {
       <Hero />
       <WhatWeDo />
       <Services />
+      <Packages />
       <WhyTPG />
       <Portfolio />
       <Journey />

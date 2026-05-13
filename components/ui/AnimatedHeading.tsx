@@ -37,20 +37,38 @@ export function AnimatedHeading({
 
       gsap.set(ref.current, { opacity: 1 })
 
+      if (isMobile) {
+        gsap.from(ref.current, {
+          y: 18,
+          opacity: 0,
+          duration: 0.65,
+          ease: 'power3.out',
+          delay,
+          scrollTrigger: triggerOnMount || Tag === 'h1'
+            ? undefined
+            : {
+                trigger: ref.current,
+                start: 'top 88%',
+                once: true,
+              },
+        })
+        return
+      }
+
       const split = SplitText.create(ref.current, {
-        type: isMobile ? 'words' : 'chars, words',
+        type: 'chars, words',
         mask: 'chars',
         autoSplit: true,
       })
 
-      const targets = isMobile ? split.words : split.chars
+      const targets = split.chars
 
       const animProps = {
         yPercent: 110,
         opacity: 0,
         duration: 0.85,
         ease: 'power3.out' as const,
-        stagger: isMobile ? 0.06 : 0.022,
+        stagger: 0.022,
         delay,
       }
 

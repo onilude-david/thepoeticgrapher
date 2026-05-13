@@ -1,6 +1,7 @@
 import { GraduationCap, User, Users, Calendar } from 'lucide-react'
 import type {
   ServiceItem,
+  PackageItem,
   PortfolioItem,
   JourneyStep,
   FAQItem,
@@ -39,6 +40,58 @@ export const services: ServiceItem[] = [
     description:
       'For birthdays, ceremonies, church events, private gatherings, and celebrations that deserve to be remembered.',
     Icon: Calendar,
+  },
+]
+
+export const packages: PackageItem[] = [
+  {
+    id: 'basic',
+    number: '01',
+    name: 'Basic Package',
+    subtitle: 'A quiet way to hold the moment properly. Something simple but meaningful.',
+    price: '40,000',
+    details: ['1 outfit', '4 edited images'],
+  },
+  {
+    id: 'essentials-family',
+    number: '02',
+    name: 'Essentials Family Package',
+    subtitle: 'For family warmth, soft connection, and portraits that feel like home.',
+    price: '80k',
+    details: ['7-10 edited images', '+1 frame'],
+    featured: true,
+  },
+  {
+    id: 'keepsakes',
+    number: '03',
+    name: 'Keepsakes',
+    subtitle: 'For a framed memory and a small set of carefully finished photographs.',
+    price: '70k',
+    details: ['5 edited pictures', '+1 frame'],
+  },
+  {
+    id: 'group-of-4',
+    number: '04',
+    name: 'Group of 4',
+    subtitle: 'For friends, siblings, teams, or a shared milestone with individual keepsakes.',
+    price: '120k',
+    details: ['4 people', '4 pictures each'],
+  },
+]
+
+export const packageAddOns = [
+  {
+    title: 'Cinematic Graduation Reel',
+    note: 'Best seller',
+    description: 'Short video clips edited into a beautiful reel for Instagram or a personal keepsake.',
+  },
+  {
+    title: 'Extra Edited Images',
+    description: 'Add more finished photographs to your final delivery.',
+  },
+  {
+    title: 'Priority Delivery',
+    description: 'For moments that need a faster turnaround.',
   },
 ]
 
@@ -152,7 +205,7 @@ export const faqItems: FAQItem[] = [
 export const testimonial: TestimonialItem = {
   quote:
     'ThePoeticGrapher didn\'t just take pictures. She captured the feeling behind the moment. Every frame felt intentional, emotional, and timeless.',
-  client: 'Adaeze O.',
+  client: 'Plesant O.',
   session: 'Convocation Portrait',
   image: '/images/Portraits/IMG_0033.jpg',
 }
@@ -170,3 +223,24 @@ const WHATSAPP_MESSAGE = [
 export const WHATSAPP_URL = `https://wa.me/2347050377154?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
 export const EMAIL = 'thepoeticgrapher@gmail.com'
 export const INSTAGRAM_URL = 'https://instagram.com/thepoeticgrapher'
+
+interface PackageInquiryDetails {
+  name?: string
+  date?: string
+  location?: string
+  moment?: string
+}
+
+export function getPackageWhatsAppUrl(packageName: string, details: PackageInquiryDetails = {}) {
+  const message = [
+    'Hi ThePoeticGrapher, I would like to learn more about a package.',
+    '',
+    `Package: ${packageName}`,
+    `Name: ${details.name || ''}`,
+    `Preferred date: ${details.date || ''}`,
+    `Location: ${details.location || ''}`,
+    `A little about the moment: ${details.moment || ''}`,
+  ].join('\n')
+
+  return `https://wa.me/2347050377154?text=${encodeURIComponent(message)}`
+}

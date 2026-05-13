@@ -8,6 +8,16 @@ export interface ServiceItem {
   Icon: LucideIcon
 }
 
+export interface PackageItem {
+  id: string
+  number: string
+  name: string
+  subtitle?: string
+  price: string
+  details: string[]
+  featured?: boolean
+}
+
 export interface PortfolioItem {
   id: string
   title: string

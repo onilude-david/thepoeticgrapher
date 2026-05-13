@@ -16,6 +16,7 @@ export function Bg3D({ variant = 'light', className }: Bg3DProps) {
   useGSAP(() => {
     if (!ref.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches) return
 
     const shapes = ref.current.querySelectorAll<HTMLElement>('.bg3d-shape')
 
@@ -67,7 +68,7 @@ export function Bg3D({ variant = 'light', className }: Bg3DProps) {
   return (
     <div
       ref={ref}
-      className={cn('absolute inset-0 hidden pointer-events-none overflow-hidden select-none sm:block', className)}
+      className={cn('absolute inset-0 hidden pointer-events-none overflow-hidden select-none lg:block', className)}
       aria-hidden="true"
     >
       {/* Large ring — top right */}
