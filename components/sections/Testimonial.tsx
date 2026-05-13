@@ -30,7 +30,7 @@ export function Testimonial() {
                     src={testimonial.image}
                     alt="Portrait of a happy ThePoeticGrapher Studios client"
                     aspectRatio="4/5"
-                    objectPosition="center"
+                    objectPosition={testimonial.objectPosition ?? '50% 14%'}
                   />
                 </Tilt3D>
                 <div

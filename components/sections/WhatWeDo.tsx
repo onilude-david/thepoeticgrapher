@@ -10,33 +10,33 @@ import { Reveal } from '@/components/ui/Reveal'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Tilt3D } from '@/components/ui/Tilt3D'
 import { useLightbox } from '@/contexts/LightboxContext'
-import { WHATSAPP_URL } from '@/lib/data'
+import { BOOKING_FORM_HREF } from '@/lib/data'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
 const gridImages = [
   {
-    src: '/images/Graduation%20Portrait/_Q7A9135-.jpg',
-    alt: 'Convocation portrait — a graduate in academic regalia, framed with quiet pride',
-    title: 'The Ceremony',
-    caption: 'Convocation Portrait',
+    src: '/images/Portraits/IMG_9785-2.jpeg',
+    alt: 'Editorial portrait — a composed studio frame with soft presence',
+    title: 'Still Grace',
+    caption: 'Portrait Session',
   },
   {
-    src: '/images/Portraits/IMG_0033.jpg',
-    alt: 'Studio portrait — a quiet side gaze with expressive styling',
-    title: 'Poise',
-    caption: 'Studio Portrait',
+    src: '/images/Portraits/IMG_9848.jpeg',
+    alt: 'Personal portrait — a calm image held with careful light',
+    title: 'Soft Resolve',
+    caption: 'Personal Portrait',
   },
   {
-    src: '/images/Portraits/IMG_9609.jpg',
-    alt: 'Family maternity portrait — a father holding a quiet moment close',
-    title: 'Waiting Joy',
-    caption: 'Family Portrait',
+    src: '/images/Portraits/IMG_9903.jpeg',
+    alt: 'Portrait story — a person framed with warmth and intention',
+    title: 'Near Light',
+    caption: 'Story Portrait',
   },
   {
-    src: '/images/events/IMG_1105.jpeg',
-    alt: 'Event documentation — a drummer mid-performance, captured in motion',
-    title: 'Rhythm',
+    src: '/images/events/IMG_0417.jpeg',
+    alt: 'Event documentation — a celebration moment captured with atmosphere',
+    title: 'Gathered',
     caption: 'Event Documentation',
   },
 ]
@@ -305,9 +305,7 @@ export function WhatWeDo() {
               <Button
                 as="a"
                 variant="primary"
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={BOOKING_FORM_HREF}
                 className="w-full sm:w-auto"
               >
                 Book Your Session

@@ -75,7 +75,7 @@ export function ImageCard({
             alt={alt}
             fill
             className={cn(
-              'object-cover img-bw transition-transform duration-500 group-hover:scale-[1.04]'
+              'object-cover img-bw transition-all duration-700 group-hover:scale-[1.04] group-hover:filter-none'
             )}
             style={{ objectPosition }}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -119,7 +119,7 @@ export function ImageCard({
       {/* Overlay for cards with text */}
       {(title || caption) && (
         <div
-          className="absolute inset-0 flex flex-col justify-end p-3 pointer-events-none sm:p-5"
+          className="absolute inset-0 flex flex-col justify-end p-3 pointer-events-none transition-opacity duration-500 group-hover:opacity-0 sm:p-5"
           style={{
             background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)',
           }}

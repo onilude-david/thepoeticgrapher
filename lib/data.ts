@@ -15,6 +15,8 @@ export const services: ServiceItem[] = [
     title: 'Convocation Portraits',
     description:
       'For the milestone, the pride, the sacrifice, and the story behind the achievement.',
+    image: '/images/Portraits/1001639215.jpeg',
+    objectPosition: '50% 12%',
     Icon: GraduationCap,
   },
   {
@@ -23,6 +25,8 @@ export const services: ServiceItem[] = [
     title: 'Personal Sessions',
     description:
       'For birthdays, lifestyle portraits, creative shoots, and moments where you want to see yourself beautifully.',
+    image: '/images/Portraits/IMG_9883.jpeg',
+    objectPosition: '50% 18%',
     Icon: User,
   },
   {
@@ -31,6 +35,7 @@ export const services: ServiceItem[] = [
     title: 'Family & Friend Portraits',
     description:
       'For connection, laughter, warmth, and the people who make life meaningful.',
+    image: '/images/Portraits/IMG_9609.jpg',
     Icon: Users,
   },
   {
@@ -39,6 +44,8 @@ export const services: ServiceItem[] = [
     title: 'Event Documentation',
     description:
       'For birthdays, ceremonies, church events, private gatherings, and celebrations that deserve to be remembered.',
+    image: '/images/events/IMG_0422.jpeg',
+    objectPosition: '50% 18%',
     Icon: Calendar,
   },
 ]
@@ -49,7 +56,7 @@ export const packages: PackageItem[] = [
     number: '01',
     name: 'Basic Package',
     subtitle: 'A quiet way to hold the moment properly. Something simple but meaningful.',
-    price: '40,000',
+    price: '₦40,000',
     details: ['1 outfit', '4 edited images'],
   },
   {
@@ -57,7 +64,7 @@ export const packages: PackageItem[] = [
     number: '02',
     name: 'Essentials Family Package',
     subtitle: 'For family warmth, soft connection, and portraits that feel like home.',
-    price: '80k',
+    price: '₦80,000',
     details: ['7-10 edited images', '+1 frame'],
     featured: true,
   },
@@ -66,7 +73,7 @@ export const packages: PackageItem[] = [
     number: '03',
     name: 'Keepsakes',
     subtitle: 'For a framed memory and a small set of carefully finished photographs.',
-    price: '70k',
+    price: '₦70,000',
     details: ['5 edited pictures', '+1 frame'],
   },
   {
@@ -74,7 +81,7 @@ export const packages: PackageItem[] = [
     number: '04',
     name: 'Group of 4',
     subtitle: 'For friends, siblings, teams, or a shared milestone with individual keepsakes.',
-    price: '120k',
+    price: '₦120,000',
     details: ['4 people', '4 pictures each'],
   },
 ]
@@ -107,8 +114,9 @@ export const portfolioItems: PortfolioItem[] = [
     id: 'portrait-01',
     title: 'Poise',
     caption: 'Studio Portrait · Lagos',
-    image: '/images/Portraits/IMG_0033.jpg',
+    image: '/images/Portraits/IMG_0036.jpg',
     category: 'Portrait',
+    objectPosition: '50% 16%',
   },
   {
     id: 'portrait-02',
@@ -116,13 +124,15 @@ export const portfolioItems: PortfolioItem[] = [
     caption: 'Personal Session · Lagos',
     image: '/images/Portraits/IMG_8830.jpeg',
     category: 'Portrait',
+    objectPosition: '50% 15%',
   },
   {
     id: 'family-01',
     title: 'Waiting Joy',
     caption: 'Family Portrait',
-    image: '/images/Portraits/IMG_9609.jpg',
+    image: '/images/Portraits/IMG_4379.jpeg',
     category: 'Family',
+    objectPosition: '50% 18%',
   },
   {
     id: 'family-02',
@@ -130,6 +140,7 @@ export const portfolioItems: PortfolioItem[] = [
     caption: 'Family Story',
     image: '/images/Portraits/IMG_9595.jpeg',
     category: 'Family',
+    objectPosition: '50% 12%',
   },
   {
     id: 'event-01',
@@ -137,6 +148,7 @@ export const portfolioItems: PortfolioItem[] = [
     caption: 'Event Documentation',
     image: '/images/events/IMG_1105.jpeg',
     category: 'Event',
+    objectPosition: '50% 12%',
   },
   {
     id: 'event-02',
@@ -144,6 +156,15 @@ export const portfolioItems: PortfolioItem[] = [
     caption: 'Event Documentation',
     image: '/images/IMG_9069.jpeg',
     category: 'Event',
+    objectPosition: '50% 14%',
+  },
+  {
+    id: 'event-03',
+    title: 'Gathered Light',
+    caption: 'Event Documentation',
+    image: '/images/events/IMG_0368.jpeg',
+    category: 'Event',
+    objectPosition: '50% 18%',
   },
 ]
 
@@ -208,6 +229,7 @@ export const testimonial: TestimonialItem = {
   client: 'Plesant O.',
   session: 'Convocation Portrait',
   image: '/images/Portraits/IMG_0033.jpg',
+  objectPosition: '50% 14%',
 }
 
 // Contact details
@@ -223,6 +245,7 @@ const WHATSAPP_MESSAGE = [
 export const WHATSAPP_URL = `https://wa.me/2347050377154?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
 export const EMAIL = 'thepoeticgrapher@gmail.com'
 export const INSTAGRAM_URL = 'https://instagram.com/thepoeticgrapher'
+export const BOOKING_FORM_HREF = '#package-inquiry'
 
 interface PackageInquiryDetails {
   name?: string

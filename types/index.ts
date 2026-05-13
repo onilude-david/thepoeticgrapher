@@ -5,6 +5,8 @@ export interface ServiceItem {
   number: string
   title: string
   description: string
+  image: string
+  objectPosition?: string
   Icon: LucideIcon
 }
 
@@ -24,6 +26,7 @@ export interface PortfolioItem {
   caption: string
   image: string
   category: string
+  objectPosition?: string
 }
 
 export interface JourneyStep {
@@ -42,4 +45,5 @@ export interface TestimonialItem {
   client: string
   session: string
   image?: string
+  objectPosition?: string
 }

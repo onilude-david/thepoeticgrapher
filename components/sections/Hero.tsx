@@ -10,7 +10,7 @@ import { ParallaxImage } from '@/components/ui/ParallaxImage'
 import { ShimmerText } from '@/components/ui/ShimmerText'
 import { useLightbox } from '@/contexts/LightboxContext'
 import { useReady } from '@/contexts/ReadyContext'
-import { WHATSAPP_URL } from '@/lib/data'
+import { BOOKING_FORM_HREF } from '@/lib/data'
 
 const ease = [0.22, 1, 0.36, 1] as const
 const HERO_IMAGE = '/images/Portraits/IMG_9777-2.jpeg'
@@ -206,9 +206,7 @@ export function Hero() {
               <Button
                 as="a"
                 variant="hero-ghost"
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={BOOKING_FORM_HREF}
                 className="w-full sm:w-auto"
               >
                 Book a Session

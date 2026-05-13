@@ -110,8 +110,8 @@ function PortfolioCard({
             src={item.image}
             alt={`${item.title} — ${item.caption}`}
             fill
-            className="object-cover img-bw transition-transform duration-700 group-hover:scale-[1.04]"
-            style={{ objectPosition: 'top' }}
+            className="object-cover img-bw transition-all duration-700 group-hover:scale-[1.04] group-hover:filter-none"
+            style={{ objectPosition: item.objectPosition ?? '50% 14%' }}
             sizes="(max-width: 1024px) 85vw, 62vw"
           />
         </motion.div>
@@ -119,7 +119,7 @@ function PortfolioCard({
 
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-500 group-hover:opacity-100"
+        className="absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-500 group-hover:opacity-0"
         style={{
           background:
             'linear-gradient(112deg, transparent 0%, transparent 36%, rgba(255,255,255,0.26) 47%, transparent 58%, transparent 100%)',
@@ -159,7 +159,8 @@ function PortfolioCard({
 
       {/* Bottom caption */}
       <div
-        className="absolute inset-0 flex flex-col justify-end p-6 pointer-events-none z-10"
+        className="absolute inset-0 z-10 flex flex-col justify-end p-6 pointer-events-none transition-opacity duration-500 group-hover:opacity-0"
+        data-portfolio-overlay
         style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 58%)', transform: 'translateZ(44px)' }}
       >
         <div className="flex items-end justify-between">
@@ -417,6 +418,7 @@ export function Portfolio() {
             caption={item.caption}
             showArrow
             aspectRatio="3/4"
+            objectPosition={item.objectPosition ?? '50% 14%'}
             onClick={() => open(filteredLightbox, i)}
           />
         ))}

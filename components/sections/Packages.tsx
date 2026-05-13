@@ -13,8 +13,13 @@ import type { PackageItem } from '@/types'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-function PackageInquiry() {
-  const [selectedPackage, setSelectedPackage] = useState(packages[0]?.name ?? '')
+function PackageInquiry({
+  selectedPackage,
+  onPackageChange,
+}: {
+  selectedPackage: string
+  onPackageChange: (packageName: string) => void
+}) {
   const [name, setName] = useState('')
   const [date, setDate] = useState('')
   const [location, setLocation] = useState('')
@@ -30,7 +35,10 @@ function PackageInquiry() {
 
   return (
     <Reveal delay={0.14} className="mt-8">
-      <div className="grid gap-6 border border-border bg-white p-5 md:grid-cols-[0.85fr_1.15fr] md:p-7">
+      <div
+        id="package-inquiry"
+        className="scroll-mt-28 grid gap-6 border border-border bg-white p-5 md:grid-cols-[0.85fr_1.15fr] md:p-7"
+      >
         <div>
           <p
             className="font-sans uppercase text-muted"
@@ -56,7 +64,7 @@ function PackageInquiry() {
             </span>
             <select
               value={selectedPackage}
-              onChange={(event) => setSelectedPackage(event.target.value)}
+              onChange={(event) => onPackageChange(event.target.value)}
               className={inputClass}
               style={{ fontSize: 14 }}
             >
@@ -137,7 +145,15 @@ function PackageInquiry() {
   )
 }
 
-function PackageCard({ item, index }: { item: PackageItem; index: number }) {
+function PackageCard({
+  item,
+  index,
+  onSelect,
+}: {
+  item: PackageItem
+  index: number
+  onSelect: (packageName: string) => void
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.25 })
   const shouldReduce = useReducedMotion()
@@ -221,15 +237,13 @@ function PackageCard({ item, index }: { item: PackageItem; index: number }) {
             className="font-sans text-soft-muted uppercase"
             style={{ fontSize: 9, letterSpacing: '0.18em' }}
           >
-            NGN
+            Package
           </span>
         </div>
         <Button
-          as="a"
+          as="button"
           variant={item.featured ? 'primary' : 'ghost'}
-          href={getPackageWhatsAppUrl(item.name)}
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={() => onSelect(item.name)}
           className="w-full"
         >
           Learn More
@@ -240,6 +254,18 @@ function PackageCard({ item, index }: { item: PackageItem; index: number }) {
 }
 
 export function Packages() {
+  const [selectedPackage, setSelectedPackage] = useState(packages[0]?.name ?? '')
+
+  function selectPackage(packageName: string) {
+    setSelectedPackage(packageName)
+    window.requestAnimationFrame(() => {
+      document.getElementById('package-inquiry')?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      })
+    })
+  }
+
   return (
     <section
       id="packages"
@@ -292,11 +318,11 @@ export function Packages() {
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {packages.map((item, index) => (
-            <PackageCard key={item.id} item={item} index={index} />
+            <PackageCard key={item.id} item={item} index={index} onSelect={selectPackage} />
           ))}
         </div>
 
-        <PackageInquiry />
+        <PackageInquiry selectedPackage={selectedPackage} onPackageChange={setSelectedPackage} />
 
         <Reveal delay={0.16} className="mt-8">
           <div className="grid gap-5 border border-border bg-white/72 p-5 md:grid-cols-[auto_1fr] md:gap-7 md:p-7">

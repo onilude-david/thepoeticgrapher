@@ -2,13 +2,14 @@
 
 import { useRef } from 'react'
 
+import Image from 'next/image'
 import { motion, useInView, useReducedMotion } from 'motion/react'
 
 import { AnimatedHeading } from '@/components/ui/AnimatedHeading'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionLabel } from '@/components/ui/SectionLabel'
-import { WHATSAPP_URL, services } from '@/lib/data'
+import { BOOKING_FORM_HREF, services } from '@/lib/data'
 import type { ServiceItem } from '@/types'
 
 const serviceMeta: Record<string, { note: string; pace: string }> = {
@@ -44,7 +45,7 @@ function ServiceRow({ service, index }: { service: ServiceItem; index: number })
   return (
     <motion.div
       ref={ref}
-      className="group relative grid grid-cols-[auto_1fr] gap-x-5 gap-y-5 border-b border-border py-8 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-14 md:py-11"
+      className="group relative grid grid-cols-[auto_1fr] gap-x-5 gap-y-5 border-b border-border py-8 md:grid-cols-[auto_minmax(0,0.8fr)_minmax(0,1.4fr)_auto] md:items-center md:gap-8 md:py-11 xl:gap-12"
       initial={shouldReduce ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 34, rotateX: -10 }}
       animate={isInView || shouldReduce ? { opacity: 1, y: 0, rotateX: 0 } : {}}
       transition={{ duration: 0.75, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
@@ -90,8 +91,26 @@ function ServiceRow({ service, index }: { service: ServiceItem; index: number })
         />
       </div>
 
+      {/* Service image */}
+      <div className="relative order-3 col-span-2 overflow-hidden bg-ink md:order-none md:col-span-1 md:h-36 xl:h-40">
+        <div className="relative aspect-[16/10] md:h-full md:aspect-auto">
+          <Image
+            src={service.image}
+            alt={`${service.title} sample photograph`}
+            fill
+            className="object-cover img-bw transition-all duration-700 group-hover:scale-[1.045] group-hover:filter-none"
+            sizes="(max-width: 768px) 100vw, 24vw"
+            style={{ objectPosition: service.objectPosition ?? '50% 16%' }}
+          />
+          <div
+            className="absolute inset-0 bg-black/35 transition-opacity duration-500 group-hover:opacity-0"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+
       {/* Content */}
-      <div className="relative min-w-0">
+      <div className="relative order-2 min-w-0 md:order-none">
         {meta && (
           <div className="mb-3 flex flex-wrap gap-2">
             {[meta.note, meta.pace].map((item) => (
@@ -124,7 +143,7 @@ function ServiceRow({ service, index }: { service: ServiceItem; index: number })
       </div>
 
       {/* Right: icon + book link */}
-      <div className="relative col-span-2 flex items-center justify-between border-t border-border pt-4 md:col-span-1 md:flex-shrink-0 md:flex-col md:items-end md:justify-start md:gap-3 md:border-t-0 md:pt-0">
+      <div className="relative order-4 col-span-2 flex items-center justify-between border-t border-border pt-4 md:order-none md:col-span-1 md:flex-shrink-0 md:flex-col md:items-end md:justify-start md:gap-3 md:border-t-0 md:pt-0">
         <service.Icon
           size={20}
           strokeWidth={1.3}
@@ -132,9 +151,7 @@ function ServiceRow({ service, index }: { service: ServiceItem; index: number })
           aria-hidden="true"
         />
         <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={BOOKING_FORM_HREF}
           className="font-sans text-muted transition-colors duration-300 hover:text-ink"
           style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}
           aria-label={`Book a ${service.title} session`}
@@ -243,9 +260,7 @@ export function Services() {
             <Button
               as="a"
               variant="primary"
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={BOOKING_FORM_HREF}
               className="w-full md:w-auto"
             >
               Book Your Session

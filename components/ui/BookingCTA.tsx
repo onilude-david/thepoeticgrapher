@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { WHATSAPP_URL } from '@/lib/data'
+import { BOOKING_FORM_HREF } from '@/lib/data'
 
 export function BookingCTA() {
   const [visible, setVisible] = useState(false)
@@ -26,9 +26,7 @@ export function BookingCTA() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
           <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={BOOKING_FORM_HREF}
             className="flex w-full items-center justify-center font-sans text-white transition-colors duration-350 ease-editorial hover:bg-white hover:text-ink sm:w-auto"
             style={{
               fontSize: 10,

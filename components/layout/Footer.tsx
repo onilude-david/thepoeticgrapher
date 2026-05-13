@@ -1,5 +1,5 @@
 import { Instagram, MessageCircle, Mail, ArrowUpRight } from 'lucide-react'
-import { EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from '@/lib/data'
+import { BOOKING_FORM_HREF, EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from '@/lib/data'
 
 export function Footer() {
   return (
@@ -20,14 +20,14 @@ export function Footer() {
         style={{ zIndex: 0 }}
       >
         <span
-          className="font-serif text-white block whitespace-nowrap"
+          className="block break-all font-serif text-white md:whitespace-nowrap"
           style={{
-            fontSize: 'clamp(80px, 15vw, 220px)',
+            fontSize: 'clamp(42px, 13vw, 220px)',
             fontWeight: 400,
             opacity: 0.04,
-            lineHeight: 0.85,
-            letterSpacing: '-0.03em',
-            transform: 'translateY(15%)',
+            lineHeight: 0.78,
+            letterSpacing: '0',
+            transform: 'translateY(10%)',
           }}
         >
           THEPOETICGRAPHER
@@ -46,9 +46,7 @@ export function Footer() {
               Your Story.
             </h2>
             <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={BOOKING_FORM_HREF}
               className="inline-flex min-h-12 items-center justify-center gap-3 border border-white/25 px-6 font-sans text-white transition-colors duration-300 hover:bg-white hover:text-ink"
               style={{ fontSize: 10, letterSpacing: '0.18em', fontWeight: 600, textTransform: 'uppercase' }}
             >
@@ -153,12 +151,28 @@ export function Footer() {
           >
             Light. Camera. Poetry.
           </p>
-          <p
-            className="font-sans text-white/30"
-            style={{ fontSize: 10, letterSpacing: '0.05em' }}
-          >
-            &copy; 2026 ThePoeticGrapher Studios. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-2 sm:items-end">
+            <p
+              className="font-sans text-white/30"
+              style={{ fontSize: 10, letterSpacing: '0.05em' }}
+            >
+              &copy; 2026 ThePoeticGrapher Studios. All rights reserved.
+            </p>
+            <p
+              className="font-sans text-white/30"
+              style={{ fontSize: 10, letterSpacing: '0.05em' }}
+            >
+              Made with <span aria-label="love and fire">❤️‍🔥</span> By{' '}
+              <a
+                href="https://beeresoftwares.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/55 underline decoration-[#c8af78]/45 underline-offset-4 transition-colors duration-300 hover:text-white"
+              >
+                Beere Softwares
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
