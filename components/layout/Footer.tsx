@@ -1,5 +1,5 @@
 import { Instagram, MessageCircle, Mail, ArrowUpRight } from 'lucide-react'
-import { BOOKING_FORM_HREF, EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from '@/lib/data'
+import { BOOKING_FORM_HREF, EMAIL, INSTAGRAM_URL, WEBSITE_URL, WHATSAPP_URL } from '@/lib/data'
 
 export function Footer() {
   return (
@@ -96,6 +96,15 @@ export function Footer() {
               style={{ fontSize: 14, letterSpacing: '0.05em' }}
             >
               {EMAIL}
+            </a>
+            <a
+              href={WEBSITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 block font-sans text-white/50 hover:text-white transition-colors duration-300"
+              style={{ fontSize: 13, letterSpacing: '0.05em' }}
+            >
+              thepoeticgrapher.com.ng
             </a>
           </div>
 

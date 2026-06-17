@@ -15,8 +15,8 @@ export const services: ServiceItem[] = [
     title: 'Convocation Portraits',
     description:
       'For the milestone, the pride, the sacrifice, and the story behind the achievement.',
-    image: '/images/Portraits/1001639215.jpeg',
-    objectPosition: '50% 12%',
+    image: '/images/Graduation%20Portrait/_Q7A9135-.jpg',
+    objectPosition: '50% 16%',
     Icon: GraduationCap,
   },
   {
@@ -25,8 +25,8 @@ export const services: ServiceItem[] = [
     title: 'Personal Sessions',
     description:
       'For birthdays, lifestyle portraits, creative shoots, and moments where you want to see yourself beautifully.',
-    image: '/images/Portraits/IMG_9883.jpeg',
-    objectPosition: '50% 18%',
+    image: '/images/Portraits/1001639215.jpeg',
+    objectPosition: '50% 12%',
     Icon: User,
   },
   {
@@ -245,6 +245,7 @@ const WHATSAPP_MESSAGE = [
 export const WHATSAPP_URL = `https://wa.me/2347050377154?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
 export const EMAIL = 'thepoeticgrapher@gmail.com'
 export const INSTAGRAM_URL = 'https://instagram.com/thepoeticgrapher'
+export const WEBSITE_URL = 'https://thepoeticgrapher.com.ng'
 export const BOOKING_FORM_HREF = '#package-inquiry'
 
 interface PackageInquiryDetails {

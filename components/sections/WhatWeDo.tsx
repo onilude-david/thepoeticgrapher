@@ -16,7 +16,7 @@ const ease = [0.22, 1, 0.36, 1] as const
 
 const gridImages = [
   {
-    src: '/images/Portraits/IMG_9785-2.jpeg',
+    src: '/images/events/IMG_9413.jpeg',
     alt: 'Editorial portrait — a composed studio frame with soft presence',
     title: 'Still Grace',
     caption: 'Portrait Session',
